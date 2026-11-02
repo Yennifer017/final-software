@@ -1,0 +1,69 @@
+<div class="page-head">
+  <div><div class="breadcrumb">Finanzas <app-icono nombre="chevron-right" /> Gastos de taller</div><h1>Gastos de taller y repuestos</h1>
+    <p>Un servicio puede repartir costos entre varias categorías (por ejemplo: llantas y cambio de aceite).</p></div>
+  <a class="btn btn--secondary" routerLink="/sucursal/reportes/taller-bus"><app-icono nombre="list" />Reporte por bus</a>
+</div>
+
+<form class="stack" style="gap:var(--sp-6)" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+  <section class="card">
+    <div class="card__head"><h2>Encabezado</h2></div>
+    <div class="card__body grid grid-3">
+      <div class="field"><label for="g-b">Bus <span class="req">*</span></label>
+        <select id="g-b" class="select" formControlName="busId"><option value="">Selecciona…</option>
+          @for (b of buses(); track b.id) {<option [value]="b.id">{{ b.placa }} · {{ b.marca }} {{ b.modelo }}</option>}</select>
+        <app-campo-error [control]="form.controls.busId" /></div>
+      <div class="field"><label for="g-f">Fecha del servicio <span class="req">*</span></label><input id="g-f" type="date" class="input" formControlName="fechaServicio"></div>
+      <div class="field"><label for="g-t">Taller / proveedor</label><input id="g-t" class="input" formControlName="proveedor" placeholder="Opcional"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2>Detalle</h2><button type="button" class="btn btn--secondary btn--sm" (click)="agregarLinea()"><app-icono nombre="plus" />Agregar línea</button></div>
+    <div class="table-wrap"><table class="table" formArrayName="lineas">
+      <thead><tr><th style="width:22%">Categoría *</th><th>Descripción *</th><th style="width:18%">Tipo *</th><th style="width:16%" class="num">Monto *</th><th style="width:48px"><span class="sr-only">Quitar</span></th></tr></thead>
+      <tbody>
+        @for (l of lineas.controls; track l; let i = $index) {
+          <tr [formGroupName]="i">
+            <td><div class="field" [class.has-error]="l.get('categoriaId')!.touched && l.get('categoriaId')!.invalid">
+              <select class="select" formControlName="categoriaId" [attr.aria-label]="'Categoría línea ' + (i + 1)"><option value="">— Selecciona —</option>
+                @for (c of categorias(); track c.id) {<option [value]="c.id">{{ c.nombre }}</option>}</select>
+              <app-campo-error [control]="l.get('categoriaId')" /></div></td>
+            <td><div class="field"><input class="input" formControlName="descripcion" [attr.aria-label]="'Descripción línea ' + (i + 1)" placeholder="Ej.: 4 llantas 295/80"><app-campo-error [control]="l.get('descripcion')" /></div></td>
+            <td><select class="select" formControlName="tipo" [attr.aria-label]="'Tipo línea ' + (i + 1)"><option value="REPUESTO">Repuesto</option><option value="MANO_OBRA">Mano de obra</option></select></td>
+            <td><div class="field"><input type="number" min="0.01" step="0.01" class="input mono right" formControlName="monto" [attr.aria-label]="'Monto línea ' + (i + 1)" placeholder="0.00"><app-campo-error [control]="l.get('monto')" /></div></td>
+            <td><button type="button" class="btn btn--ghost btn--icon" (click)="quitarLinea(i)" [disabled]="lineas.length === 1" [attr.aria-label]="'Quitar línea ' + (i + 1)"><app-icono nombre="x" /></button></td>
+          </tr>
+        }
+      </tbody>
+    </table></div>
+    <div class="card__body" style="display:flex;justify-content:flex-end">
+      <div style="width:min(320px,100%)">
+        <div class="summary-line"><span class="muted">Repuestos</span><span class="mono">{{ q(totalRepuestos()) }}</span></div>
+        <div class="summary-line"><span class="muted">Mano de obra</span><span class="mono">{{ q(totalManoObra()) }}</span></div>
+        <div class="summary-line total"><span>Total del servicio</span><span class="mono">{{ q(totalRepuestos() + totalManoObra()) }}</span></div>
+      </div>
+    </div>
+    <div class="card__foot"><button type="button" class="btn btn--secondary" (click)="limpiar()">Limpiar</button>
+      <button class="btn btn--primary" [disabled]="guardando()">{{ guardando() ? 'Guardando…' : 'Guardar gasto' }}</button></div>
+  </section>
+</form>
+
+<section class="card">
+  <div class="card__head"><h2>Gastos registrados</h2>
+    <div class="field"><label for="fb" class="sr-only">Filtrar por bus</label>
+      <select id="fb" class="select" [(ngModel)]="filtroBus" (change)="cargarGastos()" aria-label="Filtrar por bus"><option value="">Todos los buses</option>
+        @for (b of buses(); track b.id) {<option [value]="b.id">{{ b.placa }}</option>}</select></div></div>
+  @if (gastos()?.length === 0) {
+    <app-vacio icono="wrench" titulo="Aún no hay gastos registrados" />
+  } @else {
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>Código</th><th>Fecha</th><th>Bus</th><th>Categorías</th><th>Proveedor</th><th class="num">Repuestos</th><th class="num">Mano de obra</th><th class="num">Total</th></tr></thead>
+      <tbody>
+        @for (g of gastos(); track g.id) {
+          <tr><td class="mono">{{ g.codigo }}</td><td>{{ f(g.fechaServicio) }}</td><td><span class="plate">{{ g.busPlaca }}</span></td><td>{{ categoriasDe(g) }}</td>
+            <td>{{ g.proveedor ?? '—' }}</td><td class="num mono">{{ q(g.totalRepuestos) }}</td><td class="num mono">{{ q(g.totalManoObra) }}</td><td class="num mono"><b>{{ q(g.total) }}</b></td></tr>
+        }
+      </tbody>
+    </table></div>
+  }
+</section>

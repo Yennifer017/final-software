@@ -46,6 +46,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/sucursal/mostrador').then(m => m.Mostrador) },
       { path: 'alquileres', title: 'Alquileres · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
         loadComponent: () => import('./features/sucursal/alquileres').then(m => m.Alquileres) },
+      { path: 'taller', title: 'Gastos de taller · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
+        loadComponent: () => import('./features/sucursal/taller').then(m => m.Taller) },
       { path: 'personal', title: 'Personal · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
         loadComponent: () => import('./features/sucursal/personal').then(m => m.Personal) },
       { path: 'perfil', title: 'Mi perfil · RutaGT', loadComponent: () => import('./features/comun/perfil-form').then(m => m.PerfilPage) },
@@ -58,6 +60,7 @@ export const routes: Routes = [
     children: [
       { path: 'sucursales', title: 'Sucursales · RutaGT', loadComponent: () => import('./features/admin/sucursales').then(m => m.Sucursales) },
       { path: 'usuarios', title: 'Usuarios · RutaGT', loadComponent: () => import('./features/admin/usuarios').then(m => m.Usuarios) },
+      { path: 'configuracion', title: 'Configuración · RutaGT', loadComponent: () => import('./features/admin/configuracion').then(m => m.ConfiguracionPage) },
       { path: 'correos', title: 'Correos y licencias · RutaGT', loadComponent: () => import('./features/admin/correos').then(m => m.Correos) },
       { path: 'mapa', title: 'Mapa de rutas · RutaGT', loadComponent: () => import('./features/reportes/mapa-rutas').then(m => m.MapaRutasPage) },
       { path: 'perfil', title: 'Mi perfil · RutaGT', loadComponent: () => import('./features/comun/perfil-form').then(m => m.PerfilPage) },
