@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Rutas y viajes</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SUCURSAL" data-page="rutas">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Sucursal Quetzaltenango</span><span class="topbar__spacer"></span><span class="avatar">CP</span></header>
+      <main class="content" data-tabs-scope>
+        <div class="page-head">
+          <div><div class="breadcrumb">Flota <i data-lucide="chevron-right"></i> Rutas y viajes</div><h1>Rutas y viajes</h1><p>Solo puedes gestionar rutas cuyo origen es tu sucursal.</p></div>
+          <div class="row"><button class="btn btn--secondary" data-open="form-ruta"><i data-lucide="route"></i>Nueva ruta</button><button class="btn btn--primary" data-open="form-viaje"><i data-lucide="calendar-plus"></i>Programar viaje</button></div>
+        </div>
+
+        <div class="tabs" role="tablist" data-tabs>
+          <button class="tab is-active" role="tab" data-target="viajes">Viajes programados</button>
+          <button class="tab" role="tab" data-target="rutas-tab">Rutas</button>
+        </div>
+
+        <section id="viajes" class="tab-panel card">
+          <div class="filters">
+            <div class="field"><label for="v-r">Ruta</label><select id="v-r" class="select"><option>Todas</option><option>Xela → Guatemala</option></select></div>
+            <div class="field"><label for="v-t">Tipo</label><select id="v-t" class="select"><option>Todos</option><option>Regular</option><option>Alquiler privado</option></select></div>
+            <div class="field"><label for="v-e">Estado</label><select id="v-e" class="select"><option>Todos</option><option>Programado</option><option>En ruta</option><option>Completado</option></select></div>
+            <div class="field"><label for="v-d">Desde</label><input id="v-d" type="date" class="input" data-today></div>
+            <div class="field"><label for="v-h">Hasta</label><input id="v-h" type="date" class="input"></div>
+          </div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Salida</th><th>Llegada est.</th><th>Ruta / destino</th><th>Tipo</th><th>Bus</th><th>Chofer</th><th class="num">Vendidos</th><th>Estado</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="mono">12/10 05:30</td><td class="mono">12/10 09:45</td><td>Xela → Guatemala</td><td><span class="badge badge--neutral">Regular</span></td><td><span class="plate">P-482KLM</span></td><td>José Ajú</td><td class="num">38 / 44</td><td><span class="badge badge--info">En ruta</span></td><td></td></tr>
+              <tr><td class="mono">12/10 08:00</td><td class="mono">12/10 12:15</td><td>Xela → Guatemala</td><td><span class="badge badge--neutral">Regular</span></td><td><span class="plate">P-109JKA</span></td><td>Luis Tzoc</td><td class="num">36 / 40</td><td><span class="badge badge--warning">Programado</span></td><td><button class="btn btn--ghost btn--icon" aria-label="Eliminar viaje" data-open="del-viaje"><i data-lucide="trash-2"></i></button></td></tr>
+              <tr><td class="mono">20/10 07:00</td><td class="mono">20/10 10:00</td><td>Xela → Antigua (privado)</td><td><span class="badge badge--info">Alquiler</span></td><td><span class="muted">Sin asignar</span></td><td><span class="muted">Sin asignar</span></td><td class="num">—</td><td><span class="badge badge--warning">Programado</span></td><td><a class="btn btn--secondary btn--sm" href="sucursal-alquileres.html">Asignar</a></td></tr>
+            </tbody>
+          </table></div>
+        </section>
+
+        <section id="rutas-tab" class="tab-panel card" hidden>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Origen</th><th>Destino</th><th class="num">Distancia</th><th class="num">Precio boleto</th><th class="num">Viajes asociados</th><th>Estado</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>Quetzaltenango</td><td>Guatemala</td><td class="num mono">201 km</td><td class="num mono">Q 85.00</td><td class="num">1,204</td><td><span class="badge badge--success">Activa</span></td><td><button class="btn btn--ghost btn--icon" aria-label="Editar"><i data-lucide="pencil"></i></button><button class="btn btn--ghost btn--icon" aria-label="No se puede eliminar: tiene viajes" disabled title="No se puede eliminar: tiene viajes asociados"><i data-lucide="trash-2"></i></button></td></tr>
+              <tr><td>Quetzaltenango</td><td>Cobán</td><td class="num mono">312 km</td><td class="num mono">Q 120.00</td><td class="num">0</td><td><span class="badge badge--success">Activa</span></td><td><button class="btn btn--ghost btn--icon" aria-label="Editar"><i data-lucide="pencil"></i></button><button class="btn btn--ghost btn--icon" aria-label="Eliminar"><i data-lucide="trash-2"></i></button></td></tr>
+            </tbody>
+          </table></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="overlay" id="form-viaje" hidden>
+    <form class="modal card" role="dialog" aria-modal="true" aria-labelledby="fv-t" onsubmit="return false">
+      <div class="card__head"><h2 id="fv-t">Programar viaje regular</h2><button type="button" class="btn btn--ghost btn--icon" data-close aria-label="Cerrar"><i data-lucide="x"></i></button></div>
+      <div class="card__body form-grid">
+        <div class="field full"><label for="fv-r">Ruta <span class="req">*</span></label><select id="fv-r" class="select"><option>Quetzaltenango → Guatemala (201 km · Q 85.00)</option></select></div>
+        <div class="field"><label for="fv-s">Salida <span class="req">*</span></label><input id="fv-s" type="datetime-local" class="input" data-today></div>
+        <div class="field"><label for="fv-l">Llegada estimada <span class="req">*</span></label><input id="fv-l" type="datetime-local" class="input"></div>
+        <div class="field"><label for="fv-b">Bus <span class="req">*</span></label><select id="fv-b" class="select"><option>P-109JKA · 40 pax</option></select><span class="help">Solo buses activos y libres en ese horario.</span></div>
+        <div class="field"><label for="fv-c">Chofer <span class="req">*</span></label><select id="fv-c" class="select"><option>Luis Tzoc</option></select><span class="help">Solo choferes con licencia vigente.</span></div>
+        <div class="alert alert--warning full"><i data-lucide="lock"></i><div>El tipo de viaje (regular) no podrá cambiarse después.</div></div>
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" data-close>Cancelar</button><button class="btn btn--primary">Programar</button></div>
+    </form>
+  </div>
+
+  <div class="overlay" id="form-ruta" hidden>
+    <form class="modal card" role="dialog" aria-modal="true" aria-labelledby="fr-t" onsubmit="return false">
+      <div class="card__head"><h2 id="fr-t">Nueva ruta</h2><button type="button" class="btn btn--ghost btn--icon" data-close aria-label="Cerrar"><i data-lucide="x"></i></button></div>
+      <div class="card__body form-grid">
+        <div class="field"><label for="fr-o">Origen</label><input id="fr-o" class="input" value="Quetzaltenango" readonly><span class="help">Siempre tu sucursal.</span></div>
+        <div class="field"><label for="fr-d">Sucursal destino <span class="req">*</span></label><select id="fr-d" class="select"><option>Guatemala</option><option>Cobán</option></select></div>
+        <div class="field"><label for="fr-k">Distancia aprox. <span class="req">*</span></label><input id="fr-k" type="number" class="input mono" placeholder="km"><span class="help">Sugerida por el mapa: 201 km.</span></div>
+        <div class="field"><label for="fr-p">Precio del boleto <span class="req">*</span></label><div class="input-group"><span class="addon">Q</span><input id="fr-p" class="input mono"></div></div>
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" data-close>Cancelar</button><button class="btn btn--primary">Guardar ruta</button></div>
+    </form>
+  </div>
+
+  <div class="overlay" id="del-viaje" hidden>
+    <div class="modal modal--danger card" role="alertdialog" aria-modal="true" aria-labelledby="dv-t">
+      <div class="card__head"><h2 id="dv-t" class="row" style="gap:8px"><i data-lucide="triangle-alert"></i>Eliminar viaje</h2></div>
+      <div class="card__body stack">
+        <p>Se eliminará el viaje <b>Xela → Guatemala, 12/10 08:00</b> junto con sus <b>36 boletos</b> y asientos ocupados.</p>
+        <p class="small muted">A cada comprador se le reembolsará a su cartera y se le notificará por correo.</p>
+      </div>
+      <div class="card__foot"><button class="btn btn--secondary" data-close>Cancelar</button><button class="btn btn--danger">Sí, eliminar viaje</button></div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Venta en mostrador</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SUCURSAL" data-page="mostrador">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Sucursal Quetzaltenango · Mostrador</span><span class="topbar__spacer"></span><span class="avatar">CP</span></header>
+      <main class="content">
+        <div class="page-head"><div><div class="breadcrumb">Operación <i data-lucide="chevron-right"></i> Venta en mostrador</div><h1>Venta presencial de boletos</h1><p>No requiere cuenta. La venta se enlaza al NIT del cliente.</p></div></div>
+
+        <div class="split">
+          <div class="stack" style="gap:var(--sp-6)">
+            <section class="card">
+              <div class="card__head"><h2>1. Viaje</h2></div>
+              <div class="card__body form-grid">
+                <div class="field"><label for="m-f">Fecha</label><input id="m-f" type="date" class="input" data-today></div>
+                <div class="field"><label for="m-v">Viaje <span class="req">*</span></label><select id="m-v" class="select"><option>08:00 · Xela → Guatemala · 4 libres · Q 85.00</option><option>09:15 · Xela → Huehuetenango · 24 libres · Q 60.00</option></select></div>
+              </div>
+            </section>
+            <section class="card">
+              <div class="card__head"><h2>2. Asientos</h2><span class="small muted">Bus P-109JKA · 40 asientos</span></div>
+              <div class="card__body stack">
+                <div class="bus"><div class="bus__front"><span>Chofer</span><span>Puerta</span></div>
+                  <div class="seats" data-seats="40" data-price="85" data-taken="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,36,38"></div></div>
+                <div class="seat-legend"><span><i></i>Libre</span><span><i class="sel"></i>Seleccionado</span><span><i class="tak"></i>Ocupado</span></div>
+              </div>
+            </section>
+          </div>
+
+          <aside class="stack" style="gap:var(--sp-4);position:sticky;top:88px">
+            <form class="card" onsubmit="return false">
+              <div class="card__head"><h2>3. Cliente</h2></div>
+              <div class="card__body stack">
+                <div class="field"><label for="m-nit">NIT</label><div class="row" style="flex-wrap:nowrap"><input id="m-nit" class="input" value="4587219-3"><button class="btn btn--secondary btn--icon" aria-label="Buscar NIT"><i data-lucide="search"></i></button></div><span class="help">Vacío o «CF» = cliente genérico de mostrador.</span></div>
+                <div class="alert alert--success"><i data-lucide="user-check"></i><div><strong>María Rodríguez</strong>Cliente con cuenta en línea</div></div>
+                <div class="field"><label for="m-n">Nombre (si es cliente nuevo)</label><input id="m-n" class="input" placeholder="Nombre para el boleto"></div>
+              </div>
+            </form>
+            <div class="card">
+              <div class="card__head"><h2>Cobro</h2></div>
+              <div class="card__body">
+                <div class="summary-line"><span class="muted">Asientos</span><b class="mono" data-seat-summary>Ninguno</b></div>
+                <div class="summary-line total"><span>Total a cobrar</span><span class="mono" data-seat-total>Q 0.00</span></div>
+                <div class="field" style="margin-top:var(--sp-3)"><label for="m-fp">Fecha de pago</label><input id="m-fp" type="date" class="input" data-today></div>
+                <div class="field" style="margin-top:var(--sp-3)"><label for="m-mp">Forma de pago</label><select id="m-mp" class="select"><option>Efectivo</option><option>Tarjeta (POS)</option></select></div>
+              </div>
+              <div class="card__foot"><button class="btn btn--cta btn--block"><i data-lucide="printer"></i>Cobrar e imprimir boletos</button></div>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

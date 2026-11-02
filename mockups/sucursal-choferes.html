@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Choferes</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SUCURSAL" data-page="choferes">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Sucursal Quetzaltenango</span><span class="topbar__spacer"></span><span class="avatar">CP</span></header>
+      <main class="content">
+        <div class="page-head">
+          <div><div class="breadcrumb">Flota <i data-lucide="chevron-right"></i> Choferes</div><h1>Choferes</h1><p>24 choferes · 2 licencias por vencer</p></div>
+          <div class="row"><button class="btn btn--secondary"><i data-lucide="file-down"></i>Exportar PDF</button><button class="btn btn--primary" data-open="form-chofer"><i data-lucide="user-plus"></i>Registrar chofer</button></div>
+        </div>
+
+        <div class="alert alert--warning"><i data-lucide="mail"></i><div><strong>Recordatorios automáticos de licencia</strong>El sistema envía un correo al chofer y al administrador de sucursal 30, 15 y 3 días antes del vencimiento.</div></div>
+
+        <section class="card">
+          <div class="filters">
+            <div class="field" style="flex:1;min-width:220px"><label for="q">Buscar</label><input id="q" class="input" placeholder="Nombre o número de licencia"></div>
+            <div class="field"><label for="tl">Tipo de licencia</label><select id="tl" class="select"><option>Todas</option><option>A</option><option>B</option><option>C</option></select></div>
+            <div class="field"><label for="es">Estado</label><select id="es" class="select"><option>Todos</option><option>Activo</option><option>Inactivo</option></select></div>
+            <div class="field"><label for="lv">Licencia</label><select id="lv" class="select"><option>Todas</option><option>Vence en ≤ 30 días</option><option>Vencida</option></select></div>
+          </div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Chofer</th><th>No. licencia</th><th>Tipo</th><th>Vencimiento</th><th>Teléfono</th><th class="num">Salario base / viaje</th><th>Estado</th><th class="num">Viajes</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><div class="row" style="gap:10px"><span class="avatar">JA</span>José Ajú Tzul</div></td><td class="mono">2984-5712-30901</td><td>A</td><td><div>15/10/2026</div><span class="badge badge--danger">Vence en 3 días</span></td><td>5521-4433</td><td class="num mono">Q 250.00</td><td><span class="badge badge--success">Activo</span></td><td class="num">412</td><td><button class="btn btn--ghost btn--icon" aria-label="Acciones"><i data-lucide="ellipsis-vertical"></i></button></td></tr>
+              <tr><td><div class="row" style="gap:10px"><span class="avatar">AC</span>Ana Chávez López</div></td><td class="mono">1874-2290-10101</td><td>A</td><td><div>26/10/2026</div><span class="badge badge--warning">Vence en 14 días</span></td><td>4410-2299</td><td class="num mono">Q 250.00</td><td><span class="badge badge--success">Activo</span></td><td class="num">288</td><td><button class="btn btn--ghost btn--icon" aria-label="Acciones"><i data-lucide="ellipsis-vertical"></i></button></td></tr>
+              <tr><td><div class="row" style="gap:10px"><span class="avatar">LT</span>Luis Tzoc Ixcot</div></td><td class="mono">3011-8821-09012</td><td>B</td><td>02/05/2028</td><td>3020-1188</td><td class="num mono">Q 220.00</td><td><span class="badge badge--success">Activo</span></td><td class="num">156</td><td><button class="btn btn--ghost btn--icon" aria-label="Acciones"><i data-lucide="ellipsis-vertical"></i></button></td></tr>
+            </tbody>
+          </table></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="overlay" id="form-chofer" hidden>
+    <form class="drawer" role="dialog" aria-modal="true" aria-labelledby="fc-t" onsubmit="return false">
+      <div class="card__head"><h2 id="fc-t">Registrar chofer</h2><button type="button" class="btn btn--ghost btn--icon" data-close aria-label="Cerrar"><i data-lucide="x"></i></button></div>
+      <div class="card__body stack" style="gap:var(--sp-4)">
+        <div class="row"><span class="avatar avatar--lg"><i data-lucide="user"></i></span><button type="button" class="btn btn--secondary btn--sm"><i data-lucide="upload"></i>Subir foto</button></div>
+        <div class="form-grid">
+          <div class="field full"><label for="c-n">Nombre completo <span class="req">*</span></label><input id="c-n" class="input"></div>
+          <div class="field"><label for="c-l">Número de licencia <span class="req">*</span></label><input id="c-l" class="input mono"></div>
+          <div class="field"><label for="c-t">Tipo de licencia <span class="req">*</span></label><select id="c-t" class="select"><option>A</option><option>B</option><option>C</option></select></div>
+          <div class="field"><label for="c-v">Fecha de vencimiento <span class="req">*</span></label><input id="c-v" type="date" class="input" data-today></div>
+          <div class="field"><label for="c-tel">Teléfono <span class="req">*</span></label><input id="c-tel" type="tel" class="input"></div>
+          <div class="field"><label for="c-e">Correo electrónico <span class="req">*</span></label><input id="c-e" type="email" class="input"><span class="help">Para los recordatorios de licencia.</span></div>
+          <div class="field"><label for="c-s">Salario base por viaje <span class="req">*</span></label><div class="input-group"><span class="addon">Q</span><input id="c-s" class="input mono" inputmode="decimal"></div><span class="help">En alquiler privado recibe +15%.</span></div>
+          <label class="check full"><input type="checkbox">Crear usuario CHOFER para que registre salidas y llegadas</label>
+        </div>
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" data-close>Cancelar</button><button class="btn btn--primary">Guardar chofer</button></div>
+    </form>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

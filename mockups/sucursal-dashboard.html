@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Inicio sucursal</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SUCURSAL" data-page="dashboard">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar">
+        <span class="topbar__title">Sucursal Quetzaltenango</span><span class="badge badge--success">Operando</span>
+        <span class="topbar__spacer"></span>
+        <button class="btn btn--ghost btn--icon" aria-label="Notificaciones"><i data-lucide="bell"></i></button>
+        <span class="avatar">CP</span>
+      </header>
+      <main class="content">
+        <div class="page-head">
+          <div><h1>Buenos días, Carlos</h1><p>Resumen de operación de hoy, sábado 12 de octubre.</p></div>
+          <div class="row"><a class="btn btn--secondary" href="sucursal-mostrador.html"><i data-lucide="ticket"></i>Vender en mostrador</a><a class="btn btn--primary" href="sucursal-rutas-viajes.html"><i data-lucide="plus"></i>Programar viaje</a></div>
+        </div>
+
+        <section class="grid grid-4">
+          <div class="card kpi"><span class="kpi__label"><i data-lucide="ticket"></i>Boletos vendidos hoy</span><span class="kpi__value">186</span><span class="kpi__delta up">▲ 12% vs. sábado anterior</span></div>
+          <div class="card kpi"><span class="kpi__label"><i data-lucide="banknote"></i>Ingresos hoy</span><span class="kpi__value mono">Q 15,810</span><span class="kpi__delta up">▲ 8%</span></div>
+          <div class="card kpi"><span class="kpi__label"><i data-lucide="bus"></i>Buses en ruta</span><span class="kpi__value">7 / 18</span><span class="kpi__delta muted">3 en taller</span></div>
+          <div class="card kpi"><span class="kpi__label"><i data-lucide="calendar-check"></i>Alquileres por confirmar</span><span class="kpi__value">4</span><span class="kpi__delta"><a href="sucursal-alquileres.html">Revisar</a></span></div>
+        </section>
+
+        <div class="split">
+          <section class="card">
+            <div class="card__head"><h2>Salidas de hoy</h2><a href="sucursal-operacion.html" class="small">Ver todas</a></div>
+            <div class="table-wrap"><table class="table">
+              <thead><tr><th>Hora</th><th>Ruta</th><th>Bus</th><th>Chofer</th><th>Ocupación</th><th>Estado</th><th></th></tr></thead>
+              <tbody>
+                <tr><td class="mono">05:30</td><td>Xela → Guatemala</td><td><span class="plate">P-482KLM</span></td><td>José Ajú</td><td style="min-width:120px"><div class="bar"><span style="width:86%"></span></div><span class="xs muted">38/44</span></td><td><span class="badge badge--info">En ruta</span></td><td></td></tr>
+                <tr><td class="mono">08:00</td><td>Xela → Guatemala</td><td><span class="plate">P-109JKA</span></td><td>Luis Tzoc</td><td><div class="bar"><span style="width:90%"></span></div><span class="xs muted">36/40</span></td><td><span class="badge badge--warning">Por salir</span></td><td><a class="btn btn--primary btn--sm" href="sucursal-operacion.html">Registrar salida</a></td></tr>
+                <tr><td class="mono">09:15</td><td>Xela → Huehuetenango</td><td><span class="plate">P-300ABC</span></td><td>Ana Chávez</td><td><div class="bar"><span style="width:40%"></span></div><span class="xs muted">16/40</span></td><td><span class="badge badge--neutral">Programado</span></td><td></td></tr>
+              </tbody>
+            </table></div>
+          </section>
+          <section class="card">
+            <div class="card__head"><h2>Atención requerida</h2></div>
+            <div class="card__body stack">
+              <div class="alert alert--warning"><i data-lucide="id-card"></i><div><strong>2 licencias vencen en ≤ 15 días</strong>José Ajú (3 días), Ana Chávez (14 días). <a href="sucursal-choferes.html">Ver choferes</a></div></div>
+              <div class="alert alert--danger"><i data-lucide="wrench"></i><div><strong>Bus P-552QRT: 3 gastos de motor en 60 días</strong>Considera evaluar su desactivación. <a href="reporte-financiero.html#taller">Ver reporte</a></div></div>
+              <div class="alert alert--info"><i data-lucide="calendar-clock"></i><div><strong>Alquiler pagado sin bus asignado</strong>Xela → Antigua, 20 oct. <a href="sucursal-alquileres.html">Asignar</a></div></div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

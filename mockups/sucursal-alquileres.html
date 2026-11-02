@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Alquileres</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SUCURSAL" data-page="alquileres">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Sucursal Quetzaltenango</span><span class="topbar__spacer"></span><span class="avatar">CP</span></header>
+      <main class="content" data-tabs-scope>
+        <div class="page-head">
+          <div><div class="breadcrumb">Operación <i data-lucide="chevron-right"></i> Alquileres</div><h1>Alquileres de bus</h1><p>Solicitudes en línea y presenciales.</p></div>
+          <button class="btn btn--primary"><i data-lucide="plus"></i>Alquiler presencial</button>
+        </div>
+
+        <div class="tabs" role="tablist" data-tabs>
+          <button class="tab is-active" data-target="pend">Por confirmar precio <span class="badge badge--warning" style="margin-left:6px">4</span></button>
+          <button class="tab" data-target="pago">Esperando pago</button>
+          <button class="tab" data-target="asig">Pagados · asignar bus</button>
+          <button class="tab" data-target="fin">En curso / finalizados</button>
+        </div>
+
+        <div id="pend" class="tab-panel split">
+          <section class="card">
+            <div class="table-wrap"><table class="table">
+              <thead><tr><th>Solicitud</th><th>Cliente</th><th>Recorrido</th><th>Salida</th><th class="num">Pax</th><th class="num">Estimado</th></tr></thead>
+              <tbody>
+                <tr style="background:var(--brand-50)"><td class="mono">A-0193</td><td>María Rodríguez<div class="xs muted">NIT 4587219-3</div></td><td>Xela → Panajachel <span class="badge badge--neutral">Ida y vuelta</span></td><td class="mono">25/10 06:00</td><td class="num">32</td><td class="num mono">Q 3,376.00</td></tr>
+                <tr><td class="mono">A-0194</td><td>Colegio San José</td><td>Xela → Guatemala</td><td class="mono">02/11 05:00</td><td class="num">40</td><td class="num mono">Q 3,614.00</td></tr>
+              </tbody>
+            </table></div>
+          </section>
+          <form class="card" onsubmit="return false">
+            <div class="card__head"><h2>Solicitud A-0193</h2><span class="badge badge--warning">Por confirmar</span></div>
+            <div class="card__body stack">
+              <div class="summary-line"><span class="muted">Recorrido</span><span>Xela → Panajachel (ida y vuelta)</span></div>
+              <div class="summary-line"><span class="muted">Salida / retorno</span><span class="mono">25/10 06:00 – 25/10 18:00</span></div>
+              <div class="summary-line"><span class="muted">Pasajeros</span><span>32</span></div>
+              <div class="summary-line"><span class="muted">Estimado del sistema</span><span class="mono">Q 3,376.00</span></div>
+              <div class="field"><label for="pf">Precio final <span class="req">*</span></label><div class="input-group"><span class="addon">Q</span><input id="pf" class="input mono" value="3,376.00"></div><span class="help">Puedes confirmar el estimado o modificarlo.</span></div>
+              <div class="field"><label for="fc">Fecha de confirmación</label><input id="fc" type="date" class="input" data-today></div>
+              <div class="field"><label for="nt">Nota para el cliente</label><textarea id="nt" class="textarea"></textarea></div>
+            </div>
+            <div class="card__foot"><button class="btn btn--secondary">Rechazar</button><button class="btn btn--primary">Confirmar precio</button></div>
+          </form>
+        </div>
+
+        <div id="pago" class="tab-panel card" hidden><div class="empty"><i data-lucide="hourglass"></i><b>Sin alquileres esperando pago</b><span class="small">Cuando confirmes un precio, aparecerá aquí hasta que el cliente pague.</span></div></div>
+
+        <div id="asig" class="tab-panel split" hidden>
+          <section class="card"><div class="table-wrap"><table class="table">
+            <thead><tr><th>Solicitud</th><th>Recorrido</th><th>Salida</th><th class="num">Pax</th><th class="num">Pagado</th></tr></thead>
+            <tbody><tr style="background:var(--brand-50)"><td class="mono">A-0188</td><td>Xela → Antigua</td><td class="mono">20/10 07:00</td><td class="num">38</td><td class="num mono">Q 3,950.00</td></tr></tbody>
+          </table></div></section>
+          <form class="card" onsubmit="return false">
+            <div class="card__head"><h2>Asignar bus y chofer</h2></div>
+            <div class="card__body stack">
+              <div class="field"><label for="ab">Bus <span class="req">*</span></label><select id="ab" class="select"><option>P-482KLM · 44 pax · disponible</option></select><span class="help">Solo buses con capacidad ≥ 38 y libres en la fecha.</span></div>
+              <div class="field"><label for="ac">Chofer <span class="req">*</span></label><select id="ac" class="select"><option>Ana Chávez · licencia vigente</option></select></div>
+              <div class="alert alert--info"><i data-lucide="badge-percent"></i><div>Salario del chofer en este viaje: <b class="mono">Q 287.50</b> (base Q 250.00 + 15%).</div></div>
+            </div>
+            <div class="card__foot"><button class="btn btn--primary">Asignar</button></div>
+          </form>
+        </div>
+
+        <div id="fin" class="tab-panel card" hidden><div class="empty"><i data-lucide="flag"></i><b>La llegada de un alquiler se registra en «Salidas y llegadas»</b><span class="small">Con kilometraje final y gasto de combustible, igual que un viaje regular.</span><a class="btn btn--secondary" href="sucursal-operacion.html">Ir a salidas y llegadas</a></div></div>
+      </main>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

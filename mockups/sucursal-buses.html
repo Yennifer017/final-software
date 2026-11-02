@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Buses</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SUCURSAL" data-page="buses">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Sucursal Quetzaltenango</span><span class="topbar__spacer"></span><span class="avatar">CP</span></header>
+      <main class="content">
+        <div class="page-head">
+          <div><div class="breadcrumb">Flota <i data-lucide="chevron-right"></i> Buses</div><h1>Buses de la sucursal</h1><p>18 buses registrados · 15 activos</p></div>
+          <div class="row"><button class="btn btn--secondary"><i data-lucide="file-down"></i>Exportar PDF</button><button class="btn btn--primary" data-open="form-bus"><i data-lucide="plus"></i>Registrar bus</button></div>
+        </div>
+
+        <section class="card">
+          <div class="filters">
+            <div class="field" style="flex:1;min-width:220px"><label for="q">Buscar</label><input id="q" class="input" placeholder="Placa, marca o modelo"></div>
+            <div class="field"><label for="est">Estado operativo</label><select id="est" class="select"><option>Todos</option><option>Disponible</option><option>En ruta</option><option>En taller</option><option>Inactivo</option></select></div>
+            <button class="btn btn--ghost">Limpiar filtros</button>
+          </div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Foto</th><th>Placa</th><th>Marca / modelo</th><th>Año</th><th class="num">Capacidad</th><th>Estado</th><th>Chofer actual</th><th class="num">Kilometraje</th><th class="num">Viajes</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><img class="thumb" src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=88&h=88&fit=crop" alt="Bus P-482KLM"></td><td><span class="plate">P-482KLM</span></td><td>Volvo B11R</td><td>2021</td><td class="num">44</td><td><span class="badge badge--info">En ruta</span></td><td>José Ajú</td><td class="num mono">184,230 km</td><td class="num">412</td><td><button class="btn btn--ghost btn--icon" aria-label="Acciones"><i data-lucide="ellipsis-vertical"></i></button></td></tr>
+              <tr><td><img class="thumb" src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=88&h=88&fit=crop" alt="Bus P-109JKA"></td><td><span class="plate">P-109JKA</span></td><td>Mercedes-Benz OF-1721</td><td>2018</td><td class="num">40</td><td><span class="badge badge--success">Disponible</span></td><td class="muted">—</td><td class="num mono">302,118 km</td><td class="num">901</td><td><button class="btn btn--ghost btn--icon" aria-label="Acciones"><i data-lucide="ellipsis-vertical"></i></button></td></tr>
+              <tr><td><span class="thumb" style="display:grid;place-items:center"><i data-lucide="bus"></i></span></td><td><span class="plate">P-552QRT</span></td><td>Hino AK8J</td><td>2015</td><td class="num">40</td><td><span class="badge badge--warning">En taller</span></td><td class="muted">—</td><td class="num mono">451,902 km</td><td class="num">1,320</td><td><button class="btn btn--ghost btn--icon" aria-label="Acciones"><i data-lucide="ellipsis-vertical"></i></button></td></tr>
+              <tr><td><span class="thumb" style="display:grid;place-items:center"><i data-lucide="bus"></i></span></td><td><span class="plate">P-021XYZ</span></td><td>International 3000</td><td>2009</td><td class="num">36</td><td><span class="badge badge--danger">Inactivo</span></td><td class="muted">—</td><td class="num mono">620,440 km</td><td class="num">2,004</td><td><button class="btn btn--ghost btn--icon" aria-label="Acciones"><i data-lucide="ellipsis-vertical"></i></button></td></tr>
+            </tbody>
+          </table></div>
+          <div class="pagination"><span>Mostrando 1–4 de 18</span><div class="row"><button class="btn btn--secondary btn--sm">Anterior</button><button class="btn btn--secondary btn--sm">Siguiente</button></div></div>
+        </section>
+
+        <div class="alert alert--info"><i data-lucide="info"></i><div><strong>Los buses no se eliminan, solo se desactivan.</strong>Un bus solo puede desactivarse si no tiene viajes programados ni en tránsito.</div></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Drawer: formulario de bus -->
+  <div class="overlay" id="form-bus" hidden>
+    <form class="drawer" role="dialog" aria-modal="true" aria-labelledby="fb-t" onsubmit="return false">
+      <div class="card__head"><h2 id="fb-t">Registrar bus</h2><button type="button" class="btn btn--ghost btn--icon" data-close aria-label="Cerrar"><i data-lucide="x"></i></button></div>
+      <div class="card__body stack" style="gap:var(--sp-4)">
+        <div class="dropzone" tabindex="0" role="button"><i data-lucide="image-plus"></i><b>Subir foto del bus</b><span class="xs">JPG o PNG, máximo 5 MB</span></div>
+        <div class="form-grid">
+          <div class="field has-error"><label for="b-placa">Placa <span class="req">*</span></label><input id="b-placa" class="input mono" value="P-482KLM"><span class="error"><i data-lucide="circle-alert"></i>Ya existe un bus con esta placa.</span></div>
+          <div class="field"><label for="b-anio">Año de fabricación <span class="req">*</span></label><input id="b-anio" type="number" class="input" placeholder="2020"></div>
+          <div class="field"><label for="b-marca">Marca <span class="req">*</span></label><input id="b-marca" class="input"></div>
+          <div class="field"><label for="b-modelo">Modelo <span class="req">*</span></label><input id="b-modelo" class="input"></div>
+          <div class="field"><label for="b-cap">Capacidad de pasajeros <span class="req">*</span></label><input id="b-cap" type="number" min="1" class="input"></div>
+          <div class="field"><label for="b-km">Kilometraje actual <span class="req">*</span></label><div class="input-group"><input id="b-km" type="number" class="input mono" style="border-radius:var(--radius-md) 0 0 var(--radius-md)"><span class="addon" style="border-left:0;border-right:1px solid var(--color-border-strong);border-radius:0 var(--radius-md) var(--radius-md) 0">km</span></div></div>
+          <div class="field full"><label for="b-est">Estado operativo <span class="req">*</span></label><select id="b-est" class="select"><option>Disponible</option><option>En taller</option></select><span class="help">«En ruta» lo asigna el sistema al registrar una salida.</span></div>
+        </div>
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" data-close>Cancelar</button><button class="btn btn--primary">Guardar bus</button></div>
+    </form>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

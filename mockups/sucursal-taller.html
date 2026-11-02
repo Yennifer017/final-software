@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Gastos de taller</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SUCURSAL" data-page="taller">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Sucursal Quetzaltenango</span><span class="topbar__spacer"></span><span class="avatar">CP</span></header>
+      <main class="content">
+        <div class="page-head">
+          <div><div class="breadcrumb">Finanzas <i data-lucide="chevron-right"></i> Gastos de taller</div><h1>Nuevo gasto de taller y repuestos</h1><p>Un servicio puede repartir costos entre varias categorías.</p></div>
+          <a class="btn btn--secondary" href="reporte-financiero.html#taller"><i data-lucide="list"></i>Ver gastos registrados</a>
+        </div>
+
+        <form class="stack" style="gap:var(--sp-6)" onsubmit="return false">
+          <section class="card">
+            <div class="card__head"><h2>Encabezado</h2></div>
+            <div class="card__body form-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+              <div class="field"><label for="g-b">Bus <span class="req">*</span></label><select id="g-b" class="select"><option>P-552QRT · Hino AK8J</option></select></div>
+              <div class="field"><label for="g-f">Fecha del servicio <span class="req">*</span></label><input id="g-f" type="date" class="input" data-today></div>
+              <div class="field"><label for="g-t">Taller / proveedor</label><input id="g-t" class="input" placeholder="Opcional"></div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head"><h2>Detalle</h2><button type="button" class="btn btn--secondary btn--sm"><i data-lucide="plus"></i>Agregar línea</button></div>
+            <div class="table-wrap"><table class="table">
+              <thead><tr><th style="width:22%">Categoría *</th><th>Descripción</th><th style="width:18%">Tipo *</th><th style="width:16%" class="num">Monto *</th><th style="width:48px"></th></tr></thead>
+              <tbody>
+                <tr><td><select class="select" aria-label="Categoría línea 1"><option>Llantas</option></select></td><td><input class="input" aria-label="Descripción línea 1" value="4 llantas 295/80 R22.5"></td><td><select class="select" aria-label="Tipo línea 1"><option>Repuesto</option><option>Mano de obra</option></select></td><td><input class="input mono right" aria-label="Monto línea 1" value="6,400.00"></td><td><button type="button" class="btn btn--ghost btn--icon" aria-label="Quitar línea 1"><i data-lucide="x"></i></button></td></tr>
+                <tr><td><select class="select" aria-label="Categoría línea 2"><option>Llantas</option></select></td><td><input class="input" aria-label="Descripción línea 2" value="Montaje y balanceo"></td><td><select class="select" aria-label="Tipo línea 2"><option>Mano de obra</option></select></td><td><input class="input mono right" aria-label="Monto línea 2" value="400.00"></td><td><button type="button" class="btn btn--ghost btn--icon" aria-label="Quitar línea 2"><i data-lucide="x"></i></button></td></tr>
+                <tr><td><select class="select" aria-label="Categoría línea 3"><option>Cambio de aceite</option></select></td><td><input class="input" aria-label="Descripción línea 3" value="Aceite 15W40 + filtro"></td><td><select class="select" aria-label="Tipo línea 3"><option>Repuesto</option></select></td><td><input class="input mono right" aria-label="Monto línea 3" value="850.00"></td><td><button type="button" class="btn btn--ghost btn--icon" aria-label="Quitar línea 3"><i data-lucide="x"></i></button></td></tr>
+                <tr><td><div class="field has-error"><select class="select" aria-label="Categoría línea 4"><option>— Selecciona —</option></select><span class="error"><i data-lucide="circle-alert"></i>Obligatoria</span></div></td><td><input class="input" aria-label="Descripción línea 4"></td><td><select class="select" aria-label="Tipo línea 4"><option>Mano de obra</option></select></td><td><input class="input mono right" aria-label="Monto línea 4" placeholder="0.00"></td><td><button type="button" class="btn btn--ghost btn--icon" aria-label="Quitar línea 4"><i data-lucide="x"></i></button></td></tr>
+              </tbody>
+            </table></div>
+            <div class="card__body" style="display:flex;justify-content:flex-end">
+              <div style="width:min(320px,100%)">
+                <div class="summary-line"><span class="muted">Repuestos</span><span class="mono">Q 7,250.00</span></div>
+                <div class="summary-line"><span class="muted">Mano de obra</span><span class="mono">Q 400.00</span></div>
+                <div class="summary-line total"><span>Total del servicio</span><span class="mono">Q 7,650.00</span></div>
+              </div>
+            </div>
+            <div class="card__foot"><button class="btn btn--secondary">Cancelar</button><button class="btn btn--primary">Guardar gasto</button></div>
+          </section>
+        </form>
+      </main>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

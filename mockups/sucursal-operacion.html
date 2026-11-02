@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Salidas y llegadas</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SUCURSAL" data-page="operacion">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Sucursal Quetzaltenango</span><span class="topbar__spacer"></span><span class="avatar">CP</span></header>
+      <main class="content">
+        <div class="page-head">
+          <div><div class="breadcrumb">Operación <i data-lucide="chevron-right"></i> Salidas y llegadas</div><h1>Registro de salidas y llegadas</h1><p>También disponible para el chofer asignado desde su usuario.</p></div>
+        </div>
+
+        <div class="alert alert--danger"><i data-lucide="shield-alert"></i><div><strong>Los registros de salida y llegada NO se pueden modificar ni eliminar.</strong>Verifica cada dato antes de guardar.</div></div>
+
+        <div class="grid grid-2">
+          <form class="card" onsubmit="return false">
+            <div class="card__head"><h2 class="row" style="gap:8px"><i data-lucide="log-out"></i>Registrar salida</h2><span class="badge badge--warning">Por salir</span></div>
+            <div class="card__body stack" style="gap:var(--sp-4)">
+              <div class="field"><label for="s-v">Viaje <span class="req">*</span></label><select id="s-v" class="select"><option>12/10 08:00 · Xela → Guatemala · P-109JKA</option></select></div>
+              <div class="form-grid">
+                <div class="field"><label>Bus</label><input class="input mono" value="P-109JKA" readonly></div>
+                <div class="field"><label>Chofer</label><input class="input" value="Luis Tzoc" readonly></div>
+                <div class="field"><label for="s-h">Hora real de salida <span class="req">*</span></label><input id="s-h" type="datetime-local" class="input" data-today></div>
+                <div class="field"><label for="s-k">Kilometraje actual <span class="req">*</span></label><input id="s-k" type="number" class="input mono" value="302118"><span class="help">Último registrado: 302,118 km</span></div>
+              </div>
+            </div>
+            <div class="card__foot"><button class="btn btn--primary" data-open="confirm-salida">Registrar salida</button></div>
+          </form>
+
+          <form class="card" onsubmit="return false">
+            <div class="card__head"><h2 class="row" style="gap:8px"><i data-lucide="log-in"></i>Registrar llegada</h2><span class="badge badge--info">En ruta</span></div>
+            <div class="card__body stack" style="gap:var(--sp-4)">
+              <div class="field"><label for="l-v">Viaje en ruta <span class="req">*</span></label><select id="l-v" class="select"><option>12/10 05:30 · Xela → Guatemala · P-482KLM</option></select></div>
+              <div class="form-grid">
+                <div class="field"><label>Km de salida</label><input class="input mono" value="184,030" readonly></div>
+                <div class="field"><label for="l-h">Hora real de llegada <span class="req">*</span></label><input id="l-h" type="datetime-local" class="input" data-today></div>
+                <div class="field has-error"><label for="l-k">Kilometraje final <span class="req">*</span></label><input id="l-k" type="number" class="input mono" value="184000"><span class="error"><i data-lucide="circle-alert"></i>Debe ser mayor al de salida (184,030).</span></div>
+                <div class="field"><label for="l-c">Gasto total combustible <span class="req">*</span></label><div class="input-group"><span class="addon">Q</span><input id="l-c" class="input mono" value="1,180.00"></div></div>
+              </div>
+            </div>
+            <div class="card__foot"><button class="btn btn--primary" data-open="confirm-salida">Registrar llegada</button></div>
+          </form>
+        </div>
+
+        <section class="card">
+          <div class="card__head"><h2>Historial de registros (solo lectura)</h2><button class="btn btn--secondary btn--sm"><i data-lucide="file-down"></i>Exportar PDF</button></div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Viaje</th><th>Bus</th><th>Salida real</th><th class="num">Km salida</th><th>Llegada real</th><th class="num">Km final</th><th class="num">Recorrido</th><th class="num">Combustible</th><th>Registró</th></tr></thead>
+            <tbody>
+              <tr><td>Xela → Guatemala</td><td><span class="plate">P-300ABC</span></td><td class="mono">11/10 05:34</td><td class="num mono">98,120</td><td class="mono">11/10 09:51</td><td class="num mono">98,322</td><td class="num mono">202 km</td><td class="num mono">Q 1,150.00</td><td><span class="row xs" style="gap:4px"><i data-lucide="lock" style="width:14px"></i>C. Pérez</span></td></tr>
+            </tbody>
+          </table></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="overlay" id="confirm-salida" hidden>
+    <div class="modal modal--danger card locked" role="alertdialog" aria-modal="true" aria-labelledby="cs-t">
+      <div class="card__head"><h2 id="cs-t" class="row" style="gap:8px"><i data-lucide="triangle-alert"></i>¿Confirmas estos datos?</h2></div>
+      <div class="card__body stack">
+        <div class="summary-line"><span class="muted">Viaje</span><span>Xela → Guatemala · 12/10 08:00</span></div>
+        <div class="summary-line"><span class="muted">Bus / chofer</span><span><span class="plate">P-109JKA</span> · Luis Tzoc</span></div>
+        <div class="summary-line"><span class="muted">Hora real de salida</span><span class="mono">12/10/2026 08:04</span></div>
+        <div class="summary-line"><span class="muted">Kilometraje</span><span class="mono">302,118 km</span></div>
+        <label class="check"><input type="checkbox">Revisé los datos y entiendo que <b>no podrán modificarse ni eliminarse</b>.</label>
+      </div>
+      <div class="card__foot"><button class="btn btn--secondary" data-close>Revisar de nuevo</button><button class="btn btn--danger" disabled>Guardar definitivamente</button></div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
