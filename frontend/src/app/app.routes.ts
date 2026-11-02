@@ -27,6 +27,7 @@ export const routes: Routes = [
   {
     path: 'sucursal', component: Panel, canActivate: [autenticadoGuard, rolGuard], data: roles('ADMIN_SUCURSAL', 'CAJERO', 'CHOFER'),
     children: [
+      { path: 'perfil', title: 'Mi perfil · RutaGT', loadComponent: () => import('./features/comun/perfil-form').then(m => m.PerfilPage) },
     ],
   },
 
@@ -34,6 +35,9 @@ export const routes: Routes = [
   {
     path: 'admin', component: Panel, canActivate: [autenticadoGuard, rolGuard], data: roles('ADMIN_SISTEMA'),
     children: [
+      { path: 'sucursales', title: 'Sucursales · RutaGT', loadComponent: () => import('./features/admin/sucursales').then(m => m.Sucursales) },
+      { path: 'usuarios', title: 'Usuarios · RutaGT', loadComponent: () => import('./features/admin/usuarios').then(m => m.Usuarios) },
+      { path: 'perfil', title: 'Mi perfil · RutaGT', loadComponent: () => import('./features/comun/perfil-form').then(m => m.PerfilPage) },
     ],
   },
 
