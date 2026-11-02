@@ -1,0 +1,137 @@
+<div class="page-head">
+  <div><div class="breadcrumb">Flota <app-icono nombre="chevron-right" /> Rutas y viajes</div><h1>Rutas y viajes</h1>
+    <p>Solo puedes gestionar rutas cuyo origen es tu sucursal.</p></div>
+  <div class="row">
+    <button type="button" class="btn btn--secondary" (click)="nuevaRuta()"><app-icono nombre="route" />Nueva ruta</button>
+    <button type="button" class="btn btn--primary" (click)="programar()" [disabled]="misRutas().length === 0"><app-icono nombre="calendar-plus" />Programar viaje</button>
+  </div>
+</div>
+
+<div class="tabs" role="tablist">
+  <button type="button" class="tab" role="tab" [class.is-active]="tab() === 'viajes'" [attr.aria-selected]="tab() === 'viajes'" (click)="tab.set('viajes')">Viajes programados</button>
+  <button type="button" class="tab" role="tab" [class.is-active]="tab() === 'rutas'" [attr.aria-selected]="tab() === 'rutas'" (click)="tab.set('rutas')">Rutas ({{ misRutas().length }})</button>
+</div>
+
+@if (tab() === 'viajes') {
+  <section class="card">
+    <form class="filters" (ngSubmit)="cargarViajes()">
+      <div class="field"><label for="v-r">Ruta</label><select id="v-r" class="select" name="ruta" [(ngModel)]="filtro.rutaId" (change)="cargarViajes()"><option value="">Todas</option>@for (r of misRutas(); track r.id) {<option [value]="r.id">{{ r.nombre }}</option>}</select></div>
+      <div class="field"><label for="v-t">Tipo</label><select id="v-t" class="select" name="tipo" [(ngModel)]="filtro.tipo" (change)="cargarViajes()"><option value="">Todos</option><option value="REGULAR">Regular</option><option value="PRIVADO">Alquiler privado</option></select></div>
+      <div class="field"><label for="v-e">Estado</label><select id="v-e" class="select" name="estado" [(ngModel)]="filtro.estado" (change)="cargarViajes()"><option value="">Todos</option><option value="PROGRAMADO">Programado</option><option value="EN_RUTA">En ruta</option><option value="COMPLETADO">Completado</option></select></div>
+      <div class="field"><label for="v-d">Desde</label><input id="v-d" type="date" class="input" name="desde" [(ngModel)]="filtro.desde"></div>
+      <div class="field"><label for="v-h">Hasta</label><input id="v-h" type="date" class="input" name="hasta" [(ngModel)]="filtro.hasta"></div>
+      <button class="btn btn--secondary"><app-icono nombre="filter" />Filtrar</button>
+    </form>
+    @if (viajes() === null) {
+      <div class="card__body"><div class="esqueleto"></div></div>
+    } @else if (viajes()!.content.length === 0) {
+      <app-vacio icono="calendar" titulo="No hay viajes con estos filtros" texto="Programa un viaje o amplía el rango de fechas." />
+    } @else {
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Salida</th><th>Llegada est.</th><th>Ruta / destino</th><th>Tipo</th><th>Bus</th><th>Chofer</th><th class="num">Vendidos</th><th>Estado</th><th><span class="sr-only">Acciones</span></th></tr></thead>
+        <tbody>
+          @for (v of viajes()!.content; track v.id) {
+            <tr>
+              <td class="mono">{{ fh(v.salidaProgramada) }}</td>
+              <td class="mono">{{ fh(v.llegadaEstimada) }}</td>
+              <td>{{ v.descripcion }}@if (v.clienteNombre) {<div class="xs muted">{{ v.clienteNombre }}</div>}</td>
+              <td><app-estado [valor]="v.tipo" /></td>
+              <td>@if (v.busPlaca) {<span class="plate">{{ v.busPlaca }}</span>} @else {<span class="muted">Sin asignar</span>}</td>
+              <td>{{ v.choferNombre ?? 'Sin asignar' }}</td>
+              <td class="num">@if (v.tipo === 'REGULAR') {{{ v.vendidos }} / {{ v.capacidad }}} @else {{{ v.pasajerosRequeridos }} pax}</td>
+              <td><app-estado [valor]="v.estado" /></td>
+              <td><div class="acciones">
+                @if (v.estado === 'PROGRAMADO') {
+                  <button type="button" class="btn btn--secondary btn--sm" (click)="asignar(v)">{{ v.busId ? 'Cambiar' : 'Asignar' }}</button>
+                  <button type="button" class="btn btn--ghost btn--icon" (click)="eliminar(v)" aria-label="Eliminar viaje" title="Eliminar viaje"><app-icono nombre="trash-2" /></button>
+                }
+              </div></td>
+            </tr>
+          }
+        </tbody>
+      </table></div>
+      <app-paginador [pagina]="viajes()!.page" [tamano]="viajes()!.size" [total]="viajes()!.totalElements" [paginas]="viajes()!.totalPages" (cambiar)="cargarViajes($event)" />
+    }
+  </section>
+} @else {
+  <section class="card">
+    @if (misRutas().length === 0) {
+      <app-vacio icono="route" titulo="Tu sucursal aún no tiene rutas" texto="Crea la primera ruta hacia otra sucursal."><button type="button" class="btn btn--primary" (click)="nuevaRuta()">Nueva ruta</button></app-vacio>
+    } @else {
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Origen</th><th>Destino</th><th class="num">Distancia</th><th class="num">Precio boleto</th><th>Estado</th><th><span class="sr-only">Acciones</span></th></tr></thead>
+        <tbody>
+          @for (r of misRutas(); track r.id) {
+            <tr>
+              <td>{{ r.sucursalOrigenNombre }}</td><td>{{ r.sucursalDestinoNombre }}</td>
+              <td class="num mono">{{ n(r.distanciaKm) }} km</td><td class="num mono">{{ q(r.precioBoleto) }}</td>
+              <td><app-estado [valor]="r.activa ? 'ACTIVA' : 'INACTIVA'" /></td>
+              <td><div class="acciones">
+                <button type="button" class="btn btn--ghost btn--icon" (click)="editarRuta(r)" [attr.aria-label]="'Editar ruta ' + r.nombre"><app-icono nombre="pencil" /></button>
+                <button type="button" class="btn btn--ghost btn--sm" (click)="estadoRuta(r)">{{ r.activa ? 'Desactivar' : 'Activar' }}</button>
+                <button type="button" class="btn btn--ghost btn--icon" (click)="eliminarRuta(r)" [attr.aria-label]="'Eliminar ruta ' + r.nombre"><app-icono nombre="trash-2" /></button>
+              </div></td>
+            </tr>
+          }
+        </tbody>
+      </table></div>
+    }
+  </section>
+}
+
+@if (modalViaje()) {
+  <div class="overlay" (click)="modalViaje.set(false)">
+    <form class="modal card" role="dialog" aria-modal="true" aria-labelledby="fv-t" [formGroup]="formViaje" (ngSubmit)="guardarViaje()"
+          (click)="$event.stopPropagation()" (keydown.escape)="modalViaje.set(false)" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" novalidate>
+      <div class="card__head"><h2 id="fv-t">{{ asignando() ? (asignando()!.tipo === 'PRIVADO' ? 'Asignar bus y chofer · ' + asignando()!.alquilerCodigo : 'Cambiar asignación') : 'Programar viaje regular' }}</h2>
+        <button type="button" class="btn btn--ghost btn--icon" (click)="modalViaje.set(false)" aria-label="Cerrar"><app-icono nombre="x" /></button></div>
+      <div class="card__body form-grid">
+        @if (!asignando()) {
+          <div class="field full"><label for="fv-r">Ruta <span class="req">*</span></label>
+            <select id="fv-r" class="select" formControlName="rutaId" (change)="sugerirLlegada()">
+              @for (r of misRutas(); track r.id) {<option [value]="r.id" [disabled]="!r.activa">{{ r.nombre }} ({{ n(r.distanciaKm) }} km · {{ q(r.precioBoleto) }})</option>}
+            </select><app-campo-error [control]="formViaje.controls.rutaId" /></div>
+        } @else {
+          <div class="full summary-line"><span class="muted">Viaje</span><span>{{ asignando()!.descripcion }}@if (capacidadMinima()) { · {{ capacidadMinima() }} pasajeros}</span></div>
+        }
+        <div class="field"><label for="fv-s">Salida <span class="req">*</span></label><input id="fv-s" type="datetime-local" class="input" formControlName="salidaProgramada" (change)="sugerirLlegada()"></div>
+        <div class="field"><label for="fv-l">Llegada estimada <span class="req">*</span></label><input id="fv-l" type="datetime-local" class="input" formControlName="llegadaEstimada"></div>
+        <div class="field"><label for="fv-b">Bus <span class="req">*</span></label>
+          <select id="fv-b" class="select" formControlName="busId"><option value="">Selecciona…</option>
+            @for (b of buses(); track b.id) {<option [value]="b.id" [disabled]="b.capacidad < capacidadMinima()">{{ b.placa }} · {{ b.capacidad }} pax</option>}
+          </select><span class="help">Activos y fuera de taller. La disponibilidad en el horario se valida al guardar.</span><app-campo-error [control]="formViaje.controls.busId" /></div>
+        <div class="field"><label for="fv-c">Chofer <span class="req">*</span></label>
+          <select id="fv-c" class="select" formControlName="choferId"><option value="">Selecciona…</option>
+            @for (c of choferes(); track c.id) {<option [value]="c.id">{{ c.nombreCompleto }}</option>}
+          </select><span class="help">Solo choferes con licencia vigente en la fecha.</span><app-campo-error [control]="formViaje.controls.choferId" /></div>
+        @if (asignando()?.tipo === 'PRIVADO') {
+          <div class="alert alert--info full"><app-icono nombre="badge-percent" /><div>En un alquiler privado el chofer recibe su salario base + 15 %.</div></div>
+        } @else if (!asignando()) {
+          <div class="alert alert--warning full"><app-icono nombre="lock" /><div>El tipo de viaje (regular) no podrá cambiarse después.</div></div>
+        }
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" (click)="modalViaje.set(false)">Cancelar</button>
+        <button class="btn btn--primary" [disabled]="guardando()">{{ guardando() ? 'Guardando…' : asignando() ? 'Guardar asignación' : 'Programar' }}</button></div>
+    </form>
+  </div>
+}
+
+@if (modalRuta()) {
+  <div class="overlay" (click)="modalRuta.set(false)">
+    <form class="modal card" role="dialog" aria-modal="true" aria-labelledby="fr-t" [formGroup]="formRuta" (ngSubmit)="guardarRuta()"
+          (click)="$event.stopPropagation()" (keydown.escape)="modalRuta.set(false)" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" novalidate>
+      <div class="card__head"><h2 id="fr-t">{{ editandoRuta() ? 'Editar ruta' : 'Nueva ruta' }}</h2>
+        <button type="button" class="btn btn--ghost btn--icon" (click)="modalRuta.set(false)" aria-label="Cerrar"><app-icono nombre="x" /></button></div>
+      <div class="card__body form-grid">
+        <div class="field"><label for="fr-o">Origen</label><input id="fr-o" class="input" [value]="auth_sucursal()" readonly><span class="help">Siempre tu sucursal.</span></div>
+        <div class="field"><label for="fr-d">Sucursal destino <span class="req">*</span></label>
+          <select id="fr-d" class="select" formControlName="sucursalDestinoId" (change)="sugerirDistancia()"><option value="">Selecciona…</option>
+            @for (s of otrasSucursales(); track s.id) {<option [value]="s.id">{{ s.nombre }}</option>}</select><app-campo-error [control]="formRuta.controls.sucursalDestinoId" /></div>
+        <div class="field"><label for="fr-k">Distancia aprox. (km) <span class="req">*</span></label><input id="fr-k" type="number" min="0.1" step="0.1" class="input mono" formControlName="distanciaKm">
+          @if (sugerida()) {<span class="help">Sugerida por el mapa: {{ sugerida() }} km.</span>}<app-campo-error [control]="formRuta.controls.distanciaKm" /></div>
+        <div class="field"><label for="fr-p">Precio del boleto <span class="req">*</span></label><div class="input-group"><span class="addon">Q</span><input id="fr-p" type="number" min="0.01" step="0.01" class="input mono" formControlName="precioBoleto"></div><app-campo-error [control]="formRuta.controls.precioBoleto" /></div>
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" (click)="modalRuta.set(false)">Cancelar</button><button class="btn btn--primary">Guardar ruta</button></div>
+    </form>
+  </div>
+}
