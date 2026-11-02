@@ -27,10 +27,16 @@ export const routes: Routes = [
   {
     path: 'sucursal', component: Panel, canActivate: [autenticadoGuard, rolGuard], data: roles('ADMIN_SUCURSAL', 'CAJERO', 'CHOFER'),
     children: [
+      { path: '', title: 'Inicio · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL', 'CAJERO'),
+        loadComponent: () => import('./features/sucursal/inicio').then(m => m.InicioSucursal) },
       { path: 'buses', title: 'Buses · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
         loadComponent: () => import('./features/sucursal/buses').then(m => m.Buses) },
       { path: 'choferes', title: 'Choferes · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
         loadComponent: () => import('./features/sucursal/choferes').then(m => m.Choferes) },
+      { path: 'viajes', title: 'Rutas y viajes · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
+        loadComponent: () => import('./features/sucursal/rutas-viajes').then(m => m.RutasViajes) },
+      { path: 'operacion', title: 'Salidas y llegadas · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL', 'CHOFER'),
+        loadComponent: () => import('./features/sucursal/operacion').then(m => m.Operacion) },
       { path: 'personal', title: 'Personal · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
         loadComponent: () => import('./features/sucursal/personal').then(m => m.Personal) },
       { path: 'perfil', title: 'Mi perfil · RutaGT', loadComponent: () => import('./features/comun/perfil-form').then(m => m.PerfilPage) },
