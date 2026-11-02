@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Mi cuenta</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <nav class="portal-nav" aria-label="Portal">
+    <a href="cliente-viajes.html" class="row" style="color:#fff;font-weight:700;gap:10px"><span class="logo-mark"><i data-lucide="bus-front"></i></span><span class="hide-sm">RutaGT</span></a>
+    <a href="cliente-viajes.html">Viajes</a>
+    <a href="cliente-alquiler.html">Alquilar bus</a>
+    <a href="cliente-cuenta.html" class="is-active hide-sm">Mi cuenta</a>
+    <span class="topbar__spacer"></span>
+    <a href="#cartera" class="wallet-chip"><i data-lucide="wallet"></i><span class="mono">Q 350.00</span></a>
+  </nav>
+
+  <main class="content" data-tabs-scope>
+    <div class="page-head"><div><h1>Mi cuenta</h1><p>María Rodríguez · NIT 4587219-3</p></div></div>
+
+    <div class="tabs" role="tablist" data-tabs>
+      <button class="tab is-active" role="tab" data-target="historial">Historial</button>
+      <button class="tab" role="tab" data-target="cartera">Cartera digital</button>
+      <button class="tab" role="tab" data-target="perfil">Perfil</button>
+    </div>
+
+    <!-- HISTORIAL -->
+    <section id="historial" class="tab-panel card">
+      <div class="filters">
+        <div class="field"><label for="h-t">Tipo</label><select id="h-t" class="select"><option>Todos</option><option>Boletos</option><option>Alquileres</option></select></div>
+        <div class="field"><label for="h-c">Canal</label><select id="h-c" class="select"><option>Todos</option><option>En línea</option><option>Mostrador</option></select></div>
+        <div class="field"><label for="h-d">Desde</label><input id="h-d" type="date" class="input"></div>
+        <div class="field"><label for="h-h">Hasta</label><input id="h-h" type="date" class="input"></div>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Fecha</th><th>Tipo</th><th>Detalle</th><th>Asientos</th><th>Canal</th><th>Estado</th><th class="num">Monto</th></tr></thead>
+          <tbody>
+            <tr><td>12/10/2026</td><td><span class="row" style="gap:6px"><i data-lucide="ticket"></i>Boleto</span></td><td>Xela → Guatemala · 05:30</td><td class="mono">10, 11</td><td>En línea</td><td><span class="badge badge--info">Programado</span></td><td class="num mono">Q 170.00</td></tr>
+            <tr><td>28/09/2026</td><td><span class="row" style="gap:6px"><i data-lucide="calendar-check"></i>Alquiler</span></td><td>Xela → Panajachel (ida y vuelta) · 32 pax</td><td>—</td><td>En línea</td><td><span class="badge badge--success">Completado</span></td><td class="num mono">Q 3,400.00</td></tr>
+            <tr><td>15/08/2026</td><td><span class="row" style="gap:6px"><i data-lucide="ticket"></i>Boleto</span></td><td>Xela → Huehuetenango · 07:00</td><td class="mono">4</td><td>Mostrador <span class="badge badge--neutral">antes de tu cuenta</span></td><td><span class="badge badge--success">Completado</span></td><td class="num mono">Q 60.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination"><span>Mostrando 3 de 3</span><div class="row"><button class="btn btn--secondary btn--sm" disabled>Anterior</button><button class="btn btn--secondary btn--sm" disabled>Siguiente</button></div></div>
+    </section>
+
+    <!-- CARTERA -->
+    <section id="cartera" class="tab-panel" hidden>
+      <div class="split">
+        <div class="stack" style="gap:var(--sp-4)">
+          <div class="wallet"><span class="row small" style="color:#C9D6E8"><i data-lucide="wallet"></i>Saldo disponible</span><span class="wallet__amount">Q 350.00</span><span class="xs" style="color:#C9D6E8">Actualizado hace un momento</span></div>
+          <div class="card">
+            <div class="card__head"><h2>Movimientos</h2></div>
+            <div class="table-wrap"><table class="table">
+              <thead><tr><th>Fecha</th><th>Concepto</th><th class="num">Monto</th><th class="num">Saldo</th></tr></thead>
+              <tbody>
+                <tr><td>12/10/2026</td><td>Compra boletos #B-10293</td><td class="num mono" style="color:var(--danger-700)">− Q 170.00</td><td class="num mono">Q 350.00</td></tr>
+                <tr><td>11/10/2026</td><td>Recarga manual</td><td class="num mono" style="color:var(--success-700)">+ Q 500.00</td><td class="num mono">Q 520.00</td></tr>
+                <tr><td>02/10/2026</td><td>Reembolso viaje cancelado #V-881</td><td class="num mono" style="color:var(--success-700)">+ Q 85.00</td><td class="num mono">Q 20.00</td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+        <form class="card" onsubmit="return false">
+          <div class="card__head"><h2>Recargar cartera</h2></div>
+          <div class="card__body stack">
+            <div class="field"><label for="monto">Monto a recargar <span class="req">*</span></label><div class="input-group"><span class="addon">Q</span><input id="monto" class="input mono" inputmode="decimal" placeholder="0.00"></div></div>
+            <div class="row"><button type="button" class="btn btn--secondary btn--sm">Q 100</button><button type="button" class="btn btn--secondary btn--sm">Q 250</button><button type="button" class="btn btn--secondary btn--sm">Q 500</button></div>
+            <div class="field"><label for="fr">Fecha de recarga</label><input id="fr" type="date" class="input" data-today></div>
+          </div>
+          <div class="card__foot"><button class="btn btn--primary"><i data-lucide="plus"></i>Recargar</button></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- PERFIL -->
+    <form id="perfil" class="tab-panel card" hidden onsubmit="return false">
+      <div class="card__head"><h2>Datos de perfil</h2></div>
+      <div class="card__body form-grid">
+        <div class="field full"><label for="p-n">Nombre completo</label><input id="p-n" class="input" value="María Rodríguez"></div>
+        <div class="field"><label for="p-nit">NIT</label><input id="p-nit" class="input" value="4587219-3"></div>
+        <div class="field"><label for="p-dpi">DPI</label><input id="p-dpi" class="input mono" value="2984571230901"></div>
+        <div class="field"><label for="p-t">Teléfono</label><input id="p-t" class="input" value="5512-3344"></div>
+        <div class="field"><label for="p-e">Correo</label><input id="p-e" class="input" value="maria@correo.com" readonly><span class="help">El correo es tu usuario y no se puede cambiar.</span></div>
+        <div class="field full"><label for="p-d">Dirección</label><input id="p-d" class="input" value="12 Av. 4-56 zona 3, Quetzaltenango"></div>
+      </div>
+      <div class="card__foot"><button class="btn btn--secondary">Cancelar</button><button class="btn btn--primary">Guardar cambios</button></div>
+    </form>
+  </main>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

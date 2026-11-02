@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Alquilar bus</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+  <nav class="portal-nav" aria-label="Portal">
+    <a href="cliente-viajes.html" class="row" style="color:#fff;font-weight:700;gap:10px"><span class="logo-mark"><i data-lucide="bus-front"></i></span><span class="hide-sm">RutaGT</span></a>
+    <a href="cliente-viajes.html">Viajes</a>
+    <a href="cliente-alquiler.html" class="is-active">Alquilar bus</a>
+    <a href="cliente-cuenta.html" class="hide-sm">Mi cuenta</a>
+    <span class="topbar__spacer"></span>
+    <a href="cliente-cuenta.html#cartera" class="wallet-chip"><i data-lucide="wallet"></i><span class="mono">Q 350.00</span></a>
+  </nav>
+
+  <main class="content">
+    <div class="page-head"><div><h1>Alquilar un bus para viaje privado</h1><p>Cualquier origen y destino. Te damos un precio estimado y la sucursal lo confirma.</p></div></div>
+
+    <div class="split">
+      <form class="card" onsubmit="return false">
+        <div class="card__head"><h2>Datos del viaje</h2></div>
+        <div class="card__body stack" style="gap:var(--sp-4)">
+          <div class="form-grid">
+            <div class="field full"><label for="suc">Sucursal que atenderá <span class="req">*</span></label><select id="suc" class="select"><option>Quetzaltenango</option><option>Guatemala</option></select></div>
+            <div class="field"><label for="or">Origen <span class="req">*</span></label><input id="or" class="input" value="Parque Central, Quetzaltenango"><span class="help">Escribe o haz clic en el mapa.</span></div>
+            <div class="field"><label for="de">Destino <span class="req">*</span></label><input id="de" class="input" value="Panajachel, Sololá"></div>
+          </div>
+          <div id="map" class="map map--sm" role="img" aria-label="Mapa para seleccionar origen y destino"></div>
+          <div class="form-grid">
+            <div class="field"><label for="fs">Fecha y hora de salida <span class="req">*</span></label><input id="fs" type="datetime-local" class="input" data-today></div>
+            <div class="field"><label for="pax">Pasajeros <span class="req">*</span></label><input id="pax" type="number" min="1" class="input" value="32"></div>
+            <label class="check full"><input type="checkbox" checked>Ida y vuelta</label>
+            <div class="field"><label for="fr">Fecha y hora de retorno</label><input id="fr" type="datetime-local" class="input"></div>
+            <div class="field"><label for="fsol">Fecha de solicitud</label><input id="fsol" type="date" class="input" data-today></div>
+            <div class="field full"><label for="obs">Observaciones</label><textarea id="obs" class="textarea" placeholder="Ej.: excursión escolar, necesitamos parada en Los Encuentros"></textarea></div>
+          </div>
+        </div>
+        <div class="card__foot"><button class="btn btn--primary"><i data-lucide="send"></i>Enviar solicitud</button></div>
+      </form>
+
+      <aside class="stack" style="gap:var(--sp-4);position:sticky;top:88px">
+        <div class="card">
+          <div class="card__head"><h2>Precio estimado</h2><span class="badge badge--warning">Por confirmar</span></div>
+          <div class="card__body">
+            <div class="summary-line"><span class="muted">Distancia aprox.</span><span class="mono">92 km × 2</span></div>
+            <div class="summary-line"><span class="muted">Tarifa por km</span><span class="mono">Q 14.00</span></div>
+            <div class="summary-line"><span class="muted">Días de servicio</span><span class="mono">1 × Q 800.00</span></div>
+            <div class="summary-line total"><span>Estimado</span><span class="mono">Q 3,376.00</span></div>
+            <p class="xs muted" style="margin-top:var(--sp-3)">La sucursal puede ajustar el precio. Pagarás con tu cartera cuando lo confirme.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__head"><h2>Mis solicitudes</h2></div>
+          <div class="card__body stack">
+            <ol class="timeline">
+              <li><span class="dot done"><i data-lucide="check"></i></span><div><b>Solicitada</b><div class="xs muted">Xela → Antigua · 20 oct</div></div></li>
+              <li><span class="dot now"><i data-lucide="badge-dollar-sign"></i></span><div><b>Precio confirmado: <span class="mono">Q 3,950.00</span></b><div class="xs muted">Esperando tu pago</div><button class="btn btn--cta btn--sm" style="margin-top:8px">Pagar con cartera</button></div></li>
+              <li><span class="dot"><i data-lucide="bus"></i></span><div><b>Bus y chofer asignados</b></div></li>
+            </ol>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    const map = L.map('map').setView([14.79, -91.35], 9);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+    const a = [14.8347, -91.5180], b = [14.7406, -91.1590];
+    L.marker(a).addTo(map).bindTooltip('Origen');
+    L.marker(b).addTo(map).bindTooltip('Destino');
+    L.polyline([a, b], { color: '#1D5BA6', weight: 4, dashArray: '8 8' }).addTo(map);
+  </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Ingresar</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .auth { display:grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+    .auth__side { background: linear-gradient(160deg, var(--brand-950), var(--brand-700)); color: var(--white); padding: var(--sp-12); display:flex; flex-direction:column; justify-content: space-between; }
+    .auth__side h1 { font-size: var(--text-4xl); font-weight: 700; max-width: 14ch; }
+    .auth__side li { display:flex; gap: var(--sp-3); align-items:center; color: #C9D6E8; }
+    .auth__form { display:grid; place-items:center; padding: var(--sp-8) var(--sp-4); }
+    .auth__card { width: min(460px, 100%); }
+    @media (max-width: 860px) { .auth { grid-template-columns: 1fr; } .auth__side { display:none; } }
+  </style>
+</head>
+<body>
+  <div class="auth">
+    <aside class="auth__side">
+      <div class="row"><span class="logo-mark"><i data-lucide="bus-front"></i></span><strong style="font-size:20px">RutaGT</strong></div>
+      <div class="stack" style="gap:var(--sp-6)">
+        <h1>Tu boleto, sin hacer cola.</h1>
+        <ul class="stack" style="list-style:none;padding:0;margin:0">
+          <li><i data-lucide="armchair"></i>Elige tu asiento en línea</li>
+          <li><i data-lucide="wallet"></i>Paga con tu cartera digital</li>
+          <li><i data-lucide="history"></i>Tus compras en mostrador también aparecen en tu historial (por NIT)</li>
+        </ul>
+      </div>
+      <p class="xs" style="color:#8EA3C0">Transporte extraurbano · Guatemala</p>
+    </aside>
+
+    <main class="auth__form">
+      <div class="auth__card card" data-tabs-scope>
+        <div class="card__body stack" style="gap:var(--sp-5)">
+          <div class="tabs" role="tablist" data-tabs>
+            <button class="tab is-active" role="tab" aria-selected="true" data-target="login">Ingresar</button>
+            <button class="tab" role="tab" aria-selected="false" data-target="registro">Crear cuenta</button>
+          </div>
+
+          <form id="login" class="tab-panel stack" style="gap:var(--sp-4)" onsubmit="return false">
+            <div><h1>Bienvenido de nuevo</h1><p class="muted small">Ingresa con tu correo y contraseña.</p></div>
+            <div class="field"><label for="email">Correo electrónico</label><input id="email" type="email" class="input" autocomplete="email" placeholder="tu@correo.com"></div>
+            <div class="field has-error"><label for="pass">Contraseña</label><input id="pass" type="password" class="input" autocomplete="current-password" value="12345">
+              <span class="error"><i data-lucide="circle-alert"></i>Correo o contraseña incorrectos.</span></div>
+            <button class="btn btn--primary btn--block">Ingresar</button>
+            <p class="xs muted">El personal de sucursal y los administradores usan esta misma pantalla; el sistema los lleva a su panel según su rol.</p>
+          </form>
+
+          <form id="registro" class="tab-panel stack" style="gap:var(--sp-4)" hidden onsubmit="return false">
+            <div><h1>Crear cuenta</h1><p class="muted small">Necesaria para comprar boletos y alquilar buses por internet.</p></div>
+            <div class="form-grid">
+              <div class="field full"><label for="r-nombre">Nombre completo <span class="req">*</span></label><input id="r-nombre" class="input" autocomplete="name"></div>
+              <div class="field"><label for="r-nit">NIT <span class="req">*</span></label><input id="r-nit" class="input" placeholder="1234567-8"><span class="help">Enlaza tus compras en mostrador.</span></div>
+              <div class="field"><label for="r-dpi">DPI <span class="req">*</span></label><input id="r-dpi" class="input mono" inputmode="numeric" maxlength="13" placeholder="13 dígitos"></div>
+              <div class="field"><label for="r-tel">Teléfono <span class="req">*</span></label><input id="r-tel" type="tel" class="input" autocomplete="tel" placeholder="5555-5555"></div>
+              <div class="field"><label for="r-email">Correo <span class="req">*</span></label><input id="r-email" type="email" class="input" autocomplete="email"></div>
+              <div class="field full"><label for="r-dir">Dirección <span class="req">*</span></label><input id="r-dir" class="input" autocomplete="street-address"></div>
+              <div class="field"><label for="r-pass">Contraseña <span class="req">*</span></label><input id="r-pass" type="password" class="input" autocomplete="new-password"><span class="help">Mínimo 8 caracteres.</span></div>
+              <div class="field"><label for="r-pass2">Confirmar <span class="req">*</span></label><input id="r-pass2" type="password" class="input" autocomplete="new-password"></div>
+            </div>
+            <div class="alert alert--info"><i data-lucide="info"></i><div>Si ya compraste en mostrador con este NIT, esas compras aparecerán automáticamente en tu historial.</div></div>
+            <button class="btn btn--primary btn--block">Crear cuenta</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Elegir asientos</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <nav class="portal-nav" aria-label="Portal">
+    <a href="cliente-viajes.html" class="row" style="color:#fff;font-weight:700;gap:10px"><span class="logo-mark"><i data-lucide="bus-front"></i></span><span class="hide-sm">RutaGT</span></a>
+    <a href="cliente-viajes.html" class="is-active">Viajes</a>
+    <a href="cliente-alquiler.html">Alquilar bus</a>
+    <a href="cliente-cuenta.html" class="hide-sm">Mi cuenta</a>
+    <span class="topbar__spacer"></span>
+    <a href="cliente-cuenta.html#cartera" class="wallet-chip"><i data-lucide="wallet"></i><span class="mono">Q 350.00</span></a>
+  </nav>
+
+  <main class="content">
+    <div class="stepper" aria-label="Progreso de compra">
+      <div class="step is-done"><span class="step__dot">✓</span>Viaje</div><span class="step__line"></span>
+      <div class="step is-current"><span class="step__dot">2</span>Asientos y pago</div><span class="step__line"></span>
+      <div class="step"><span class="step__dot">3</span>Confirmación</div>
+    </div>
+
+    <div class="page-head">
+      <div><a href="cliente-viajes.html" class="small row" style="gap:4px"><i data-lucide="arrow-left"></i>Volver a resultados</a>
+        <h1 style="margin-top:8px">Quetzaltenango → Guatemala</h1>
+        <p>Sáb 12 oct · Sale 05:30 · Llega 09:45 aprox. · Bus <span class="plate">P-482KLM</span></p></div>
+    </div>
+
+    <div class="split">
+      <section class="card">
+        <div class="card__head"><h2>Elige tus asientos</h2><span class="muted small">Capacidad: 44</span></div>
+        <div class="card__body stack" style="gap:var(--sp-5)">
+          <div class="bus">
+            <div class="bus__front"><span class="row" style="gap:6px"><i data-lucide="circle-dot"></i>Chofer</span><span>Puerta</span></div>
+            <div class="seats" data-seats="44" data-price="85" data-taken="1,2,7,8,15,22"></div>
+          </div>
+          <div class="seat-legend"><span><i></i>Libre</span><span><i class="sel"></i>Seleccionado</span><span><i class="tak"></i>Ocupado</span></div>
+        </div>
+      </section>
+
+      <aside class="card" style="position:sticky;top:88px">
+        <div class="card__head"><h2>Resumen</h2></div>
+        <div class="card__body">
+          <div class="summary-line"><span class="muted">Asientos</span><b data-seat-summary class="mono">Ninguno</b></div>
+          <div class="summary-line"><span class="muted">Precio por boleto</span><span class="mono">Q 85.00</span></div>
+          <div class="summary-line total"><span>Total</span><span class="mono" data-seat-total>Q 0.00</span></div>
+          <div class="field" style="margin-top:var(--sp-4)"><label for="fp">Fecha de pago</label><input id="fp" type="date" class="input" data-today><span class="help">Inicia con la fecha actual; puedes cambiarla.</span></div>
+          <div class="alert alert--info" style="margin-top:var(--sp-4)"><i data-lucide="wallet"></i><div>Saldo de cartera: <b class="mono">Q 350.00</b><br><a href="cliente-cuenta.html#cartera">Recargar cartera</a></div></div>
+        </div>
+        <div class="card__foot" style="flex-direction:column">
+          <button class="btn btn--cta btn--block" data-open="confirmar"><i data-lucide="lock"></i>Pagar con mi cartera</button>
+          <p class="xs muted" style="text-align:center">Los asientos se bloquean al confirmar el pago.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Modal de confirmación -->
+  <div class="overlay" id="confirmar" hidden>
+    <div class="modal card" role="dialog" aria-modal="true" aria-labelledby="mt">
+      <div class="card__head"><h2 id="mt">Confirmar compra</h2><button class="btn btn--ghost btn--icon" data-close aria-label="Cerrar"><i data-lucide="x"></i></button></div>
+      <div class="card__body stack">
+        <div class="summary-line"><span class="muted">Viaje</span><span>Xela → Guatemala · 12 oct 05:30</span></div>
+        <div class="summary-line"><span class="muted">Asientos</span><span class="mono">10, 11</span></div>
+        <div class="summary-line total"><span>Se debitará</span><span class="mono">Q 170.00</span></div>
+        <p class="small muted">Recibirás la confirmación en tu correo.</p>
+      </div>
+      <div class="card__foot"><button class="btn btn--secondary" data-close>Cancelar</button><button class="btn btn--cta">Confirmar pago</button></div>
+    </div>
+  </div>
+
+  <!-- Estado de error por concurrencia (mostrar como toast/alert en Angular) -->
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Buscar viajes</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .search { margin-top: calc(-1 * var(--sp-12)); }
+    .search .card__body { display:grid; grid-template-columns: 1fr 1fr 180px auto; gap: var(--sp-3); align-items:end; }
+    @media (max-width: 860px) { .search .card__body { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="portal-nav" aria-label="Portal">
+    <a href="cliente-viajes.html" class="row" style="color:#fff;font-weight:700;gap:10px"><span class="logo-mark"><i data-lucide="bus-front"></i></span><span class="hide-sm">RutaGT</span></a>
+    <a href="cliente-viajes.html" class="is-active">Viajes</a>
+    <a href="cliente-alquiler.html">Alquilar bus</a>
+    <a href="cliente-cuenta.html" class="hide-sm">Mi cuenta</a>
+    <span class="topbar__spacer"></span>
+    <a href="cliente-cuenta.html#cartera" class="wallet-chip"><i data-lucide="wallet"></i><span class="mono">Q 350.00</span></a>
+    <a href="cliente-cuenta.html" class="avatar" aria-label="Mi cuenta">MR</a>
+  </nav>
+
+  <header class="hero">
+    <div class="hero__inner">
+      <h1>¿A dónde viajas hoy?</h1>
+      <p>Viajes regulares entre nuestras sucursales de Guatemala.</p>
+    </div>
+  </header>
+
+  <main class="content">
+    <form class="card search" onsubmit="return false" aria-label="Buscar viajes">
+      <div class="card__body">
+        <div class="field"><label for="o">Origen</label><select id="o" class="select"><option>Quetzaltenango</option><option>Guatemala</option><option>Huehuetenango</option></select></div>
+        <div class="field"><label for="d">Destino</label><select id="d" class="select"><option>Guatemala</option><option>Cobán</option><option>Retalhuleu</option></select></div>
+        <div class="field"><label for="f">Fecha</label><input id="f" type="date" class="input" data-today></div>
+        <button class="btn btn--primary"><i data-lucide="search"></i>Buscar</button>
+      </div>
+    </form>
+
+    <div class="row between">
+      <div><h2>Quetzaltenango → Guatemala</h2><p class="muted small">4 viajes encontrados · 201 km aprox.</p></div>
+      <div class="field" style="min-width:200px"><label for="ord" class="sr-only">Ordenar</label><select id="ord" class="select"><option>Ordenar: hora de salida</option><option>Precio más bajo</option><option>Más asientos libres</option></select></div>
+    </div>
+
+    <section class="stack" aria-label="Resultados">
+      <article class="card trip">
+        <div class="stack">
+          <div class="trip__route">
+            <div><div class="trip__time">05:30</div><div class="trip__city">Quetzaltenango</div></div>
+            <div class="trip__line"></div>
+            <div class="right"><div class="trip__time">09:45</div><div class="trip__city">Guatemala</div></div>
+          </div>
+          <div class="row small muted"><i data-lucide="bus"></i>Volvo B11R · <span class="plate">P-482KLM</span><span class="badge badge--success">38 de 44 libres</span></div>
+        </div>
+        <div class="stack" style="justify-items:end"><div class="trip__price">Q 85.00</div><a class="btn btn--cta" href="cliente-asientos.html">Elegir asientos</a></div>
+      </article>
+      <article class="card trip">
+        <div class="stack">
+          <div class="trip__route">
+            <div><div class="trip__time">08:00</div><div class="trip__city">Quetzaltenango</div></div>
+            <div class="trip__line"></div>
+            <div class="right"><div class="trip__time">12:15</div><div class="trip__city">Guatemala</div></div>
+          </div>
+          <div class="row small muted"><i data-lucide="bus"></i>Mercedes-Benz OF-1721 · <span class="plate">P-109JKA</span><span class="badge badge--warning">4 de 40 libres</span></div>
+        </div>
+        <div class="stack" style="justify-items:end"><div class="trip__price">Q 85.00</div><a class="btn btn--cta" href="cliente-asientos.html">Elegir asientos</a></div>
+      </article>
+      <article class="card trip">
+        <div class="stack">
+          <div class="trip__route">
+            <div><div class="trip__time">13:00</div><div class="trip__city">Quetzaltenango</div></div>
+            <div class="trip__line"></div>
+            <div class="right"><div class="trip__time">17:15</div><div class="trip__city">Guatemala</div></div>
+          </div>
+          <div class="row small muted"><i data-lucide="bus"></i>Volvo B11R · <span class="plate">P-552QRT</span><span class="badge badge--danger">Agotado</span></div>
+        </div>
+        <div class="stack" style="justify-items:end"><div class="trip__price muted">Q 85.00</div><button class="btn btn--secondary" disabled>Sin asientos</button></div>
+      </article>
+    </section>
+  </main>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
