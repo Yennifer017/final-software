@@ -1,0 +1,74 @@
+server:
+  port: 8081
+  shutdown: graceful
+spring:
+  application:
+    name: ms-usuarios
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/db_usuarios
+    username: ${DB_USER:rutagt}
+    password: ${DB_PASSWORD:rutagt}
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: America/Guatemala
+  flyway:
+    enabled: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:rutagt}
+    password: ${RABBITMQ_PASSWORD:rutagt}
+    publisher-confirm-type: correlated
+    listener:
+      simple:
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 1000
+          multiplier: 2
+          max-interval: 8000
+  jackson:
+    time-zone: America/Guatemala
+    default-property-inclusion: always
+  web:
+    locale: es
+    locale-resolver: fixed
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+    registry-fetch-interval-seconds: 5
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+rutagt:
+  jwt:
+    secret: ${JWT_SECRET}
+    access-minutes: ${JWT_ACCESS_MINUTES:60}
+    refresh-days: ${JWT_REFRESH_DAYS:7}
+  bootstrap:
+    admin-email: ${BOOTSTRAP_ADMIN_EMAIL:admin@rutagt.com}
+    admin-password: ${BOOTSTRAP_ADMIN_PASSWORD:Admin12345}
+    admin-nombre: ${BOOTSTRAP_ADMIN_NOMBRE:Administrador del Sistema}
+  security:
+    public-paths: /api/auth/**,/api/sucursales,/api/sucursales/*
+  openapi:
+    descripcion: Autenticación, usuarios, perfiles y sucursales
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+management:
+  endpoints.web.exposure.include: health,info
+  endpoint.health.probes.enabled: true
+logging:
+  pattern:
+    level: "%5p [%X{correlationId:-}]"

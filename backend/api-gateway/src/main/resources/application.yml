@@ -1,0 +1,111 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    loadbalancer:
+      cache:
+        ttl: 5s
+    gateway:
+      server:
+        webflux:
+          httpclient:
+            connect-timeout: 3000
+            response-timeout: 30s
+          default-filters:
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+          routes:
+          - id: ms-usuarios
+            uri: lb://ms-usuarios
+            predicates:
+              - Path=/api/auth/**,/api/usuarios/**,/api/sucursales/**,/api/perfil/**
+          - id: ms-usuarios-api-docs
+            uri: lb://ms-usuarios
+            predicates:
+              - Path=/api-docs/ms-usuarios
+            filters:
+              - SetPath=/v3/api-docs
+          - id: ms-flota
+            uri: lb://ms-flota
+            predicates:
+              - Path=/api/buses/**,/api/choferes/**,/api/rutas/**,/api/archivos/**,/api/reportes/flota/**
+          - id: ms-flota-api-docs
+            uri: lb://ms-flota
+            predicates:
+              - Path=/api-docs/ms-flota
+            filters:
+              - SetPath=/v3/api-docs
+          - id: ms-viajes
+            uri: lb://ms-viajes
+            predicates:
+              - Path=/api/viajes/**,/api/boletos/**,/api/operacion/**,/api/reportes/viajes/**
+          - id: ms-viajes-api-docs
+            uri: lb://ms-viajes
+            predicates:
+              - Path=/api-docs/ms-viajes
+            filters:
+              - SetPath=/v3/api-docs
+          - id: ms-clientes
+            uri: lb://ms-clientes
+            predicates:
+              - Path=/api/clientes/**,/api/cartera/**,/api/alquileres/**,/api/reportes/clientes/**
+          - id: ms-clientes-api-docs
+            uri: lb://ms-clientes
+            predicates:
+              - Path=/api-docs/ms-clientes
+            filters:
+              - SetPath=/v3/api-docs
+          - id: ms-finanzas
+            uri: lb://ms-finanzas
+            predicates:
+              - Path=/api/finanzas/**,/api/configuracion/**,/api/categorias/**,/api/taller/**,/api/reportes/finanzas/**
+          - id: ms-finanzas-api-docs
+            uri: lb://ms-finanzas
+            predicates:
+              - Path=/api-docs/ms-finanzas
+            filters:
+              - SetPath=/v3/api-docs
+          - id: ms-notificaciones
+            uri: lb://ms-notificaciones
+            predicates:
+              - Path=/api/notificaciones/**
+          - id: ms-notificaciones-api-docs
+            uri: lb://ms-notificaciones
+            predicates:
+              - Path=/api-docs/ms-notificaciones
+            filters:
+              - SetPath=/v3/api-docs
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+    registry-fetch-interval-seconds: 5
+  instance:
+    prefer-ip-address: true
+rutagt:
+  jwt:
+    secret: ${JWT_SECRET}
+  cors:
+    origins: ${FRONTEND_URL:http://localhost:4200}
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: ms-usuarios
+        url: /api-docs/ms-usuarios
+      - name: ms-flota
+        url: /api-docs/ms-flota
+      - name: ms-viajes
+        url: /api-docs/ms-viajes
+      - name: ms-clientes
+        url: /api-docs/ms-clientes
+      - name: ms-finanzas
+        url: /api-docs/ms-finanzas
+      - name: ms-notificaciones
+        url: /api-docs/ms-notificaciones
+management:
+  endpoints.web.exposure.include: health,info,gateway
+logging:
+  pattern:
+    level: "%5p [%X{correlationId:-}]"
