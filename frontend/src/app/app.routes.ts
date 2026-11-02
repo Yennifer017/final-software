@@ -37,6 +37,7 @@ export const routes: Routes = [
     children: [
       { path: 'sucursales', title: 'Sucursales · RutaGT', loadComponent: () => import('./features/admin/sucursales').then(m => m.Sucursales) },
       { path: 'usuarios', title: 'Usuarios · RutaGT', loadComponent: () => import('./features/admin/usuarios').then(m => m.Usuarios) },
+      { path: 'correos', title: 'Correos y licencias · RutaGT', loadComponent: () => import('./features/admin/correos').then(m => m.Correos) },
       { path: 'perfil', title: 'Mi perfil · RutaGT', loadComponent: () => import('./features/comun/perfil-form').then(m => m.PerfilPage) },
     ],
   },
