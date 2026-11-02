@@ -27,6 +27,8 @@ export const routes: Routes = [
   {
     path: 'sucursal', component: Panel, canActivate: [autenticadoGuard, rolGuard], data: roles('ADMIN_SUCURSAL', 'CAJERO', 'CHOFER'),
     children: [
+      { path: '', title: 'Inicio · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL', 'CAJERO'),
+        loadComponent: () => import('./features/sucursal/inicio').then(m => m.InicioSucursal) },
       { path: 'buses', title: 'Buses · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
         loadComponent: () => import('./features/sucursal/buses').then(m => m.Buses) },
       { path: 'choferes', title: 'Choferes · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),

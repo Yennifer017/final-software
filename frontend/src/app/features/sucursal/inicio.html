@@ -1,0 +1,62 @@
+<div class="page-head">
+  <div><h1>Hola, {{ primerNombre() }}</h1><p>Resumen de operación del {{ f(fecha) }}.</p></div>
+  <div class="row">
+    <div class="field"><label for="fd" class="sr-only">Fecha</label><input id="fd" type="date" class="input" [(ngModel)]="fecha" (change)="cargar()"></div>
+    <a class="btn btn--secondary" routerLink="/sucursal/mostrador"><app-icono nombre="ticket" />Vender en mostrador</a>
+    @if (esAdmin()) {<a class="btn btn--primary" routerLink="/sucursal/viajes"><app-icono nombre="plus" />Programar viaje</a>}
+  </div>
+</div>
+
+<section class="grid grid-4">
+  <div class="card kpi"><span class="kpi__label"><app-icono nombre="ticket" />Boletos vendidos</span><span class="kpi__value">{{ n(tablero()?.boletosVendidos ?? 0) }}</span><span class="kpi__delta muted">con fecha de pago {{ f(fecha) }}</span></div>
+  <div class="card kpi"><span class="kpi__label"><app-icono nombre="banknote" />Ingresos por boletos</span><span class="kpi__value mono">{{ q(tablero()?.ingresos ?? 0) }}</span><span class="kpi__delta muted">en línea + mostrador</span></div>
+  <div class="card kpi"><span class="kpi__label"><app-icono nombre="bus" />Viajes en ruta</span><span class="kpi__value">{{ tablero()?.busesEnRuta ?? 0 }}</span><span class="kpi__delta muted">{{ tablero()?.viajesProgramados ?? 0 }} programados</span></div>
+  <div class="card kpi"><span class="kpi__label"><app-icono nombre="calendar-check" />Alquileres por confirmar</span><span class="kpi__value">{{ porConfirmar().length }}</span>
+    <span class="kpi__delta">@if (esAdmin()) {<a routerLink="/sucursal/alquileres">Revisar</a>}</span></div>
+</section>
+
+<div class="split">
+  <section class="card">
+    <div class="card__head"><h2>Salidas del día</h2>@if (esAdmin()) {<a routerLink="/sucursal/operacion" class="small">Salidas y llegadas</a>}</div>
+    @if (tablero() === null) {
+      <div class="card__body"><div class="esqueleto"></div></div>
+    } @else if (tablero()!.salidas.length === 0) {
+      <app-vacio icono="calendar" titulo="No hay salidas programadas para esta fecha" />
+    } @else {
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Hora</th><th>Viaje</th><th>Bus</th><th>Chofer</th><th>Ocupación</th><th>Estado</th></tr></thead>
+        <tbody>
+          @for (v of tablero()!.salidas; track v.id) {
+            <tr>
+              <td class="mono">{{ h(v.salidaProgramada) }}</td>
+              <td>{{ v.descripcion }} @if (v.tipo === 'PRIVADO') {<app-estado valor="PRIVADO" />}</td>
+              <td>@if (v.busPlaca) {<span class="plate">{{ v.busPlaca }}</span>} @else {<span class="muted">Sin asignar</span>}</td>
+              <td>{{ v.choferNombre ?? '—' }}</td>
+              <td style="min-width:120px">@if (v.tipo === 'REGULAR') {<div class="bar"><span [style.width.%]="ocupacion(v.vendidos, v.capacidad)"></span></div><span class="xs muted">{{ v.vendidos }}/{{ v.capacidad }}</span>} @else {<span class="xs muted">{{ v.pasajerosRequeridos }} pax</span>}</td>
+              <td><app-estado [valor]="v.estado" /></td>
+            </tr>
+          }
+        </tbody>
+      </table></div>
+    }
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2>Atención requerida</h2></div>
+    <div class="card__body stack">
+      @for (l of licencias(); track l.choferId) {
+        <div class="alert" [class.alert--danger]="l.diasRestantes <= 3" [class.alert--warning]="l.diasRestantes > 3">
+          <app-icono nombre="id-card" /><div><strong>Licencia de {{ l.nombre }} vence en {{ l.diasRestantes }} días</strong>Vencimiento: {{ f(l.fechaVencimiento) }}. <a routerLink="/sucursal/choferes">Ver choferes</a></div></div>
+      }
+      @for (a of sinBus(); track a.id) {
+        <div class="alert alert--info"><app-icono nombre="calendar-clock" /><div><strong>Alquiler {{ a.codigo }} pagado sin bus asignado</strong>{{ a.origen }} → {{ a.destino }}. <a routerLink="/sucursal/alquileres">Asignar</a></div></div>
+      }
+      @for (a of porConfirmar(); track a.id) {
+        <div class="alert alert--warning"><app-icono nombre="badge-dollar-sign" /><div><strong>Solicitud {{ a.codigo }} espera precio</strong>{{ a.clienteNombre }} · {{ a.pasajeros }} pasajeros. <a routerLink="/sucursal/alquileres">Confirmar</a></div></div>
+      }
+      @if (!licencias().length && !sinBus().length && !porConfirmar().length) {
+        <app-vacio icono="circle-check" titulo="Todo en orden" texto="No hay licencias por vencer ni alquileres pendientes." />
+      }
+    </div>
+  </section>
+</div>
