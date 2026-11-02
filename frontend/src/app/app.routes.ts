@@ -62,6 +62,7 @@ export const routes: Routes = [
   {
     path: 'admin', component: Panel, canActivate: [autenticadoGuard, rolGuard], data: roles('ADMIN_SISTEMA'),
     children: [
+      { path: '', title: 'Inicio · RutaGT', loadComponent: () => import('./features/admin/inicio').then(m => m.InicioAdmin) },
       { path: 'sucursales', title: 'Sucursales · RutaGT', loadComponent: () => import('./features/admin/sucursales').then(m => m.Sucursales) },
       { path: 'usuarios', title: 'Usuarios · RutaGT', loadComponent: () => import('./features/admin/usuarios').then(m => m.Usuarios) },
       { path: 'configuracion', title: 'Configuración · RutaGT', loadComponent: () => import('./features/admin/configuracion').then(m => m.ConfiguracionPage) },
