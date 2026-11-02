@@ -23,6 +23,7 @@
     <module>discovery-server</module>
     <module>api-gateway</module>
     <module>ms-usuarios</module>
+    <module>ms-notificaciones</module>
   </modules>
 
   <properties>
