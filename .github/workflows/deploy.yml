@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    name: Desplegar en la VM
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    steps:
+      - name: Configurar SSH
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+
+      - name: Actualizar y levantar en la VM
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          SSH_USER: ${{ secrets.DEPLOY_USER }}
+          APP_DIR: ${{ vars.DEPLOY_DIR || 'final-software' }}
+        run: |
+          ssh -i ~/.ssh/id_deploy "$SSH_USER@$HOST" "cd '$APP_DIR' && bash -s" <<'EOF'
+          set -euo pipefail
+          git fetch --prune origin main
+          git reset --hard origin/main     # el .env no se toca: está fuera de Git
+          docker compose up -d --build --wait --wait-timeout 900
+          docker compose ps
+          docker image prune -f
+          EOF
+
+      - name: Verificar que el sitio responde
+        if: vars.PROD_URL != ''
+        env:
+          URL: ${{ vars.PROD_URL }}
+        run: curl -fsS --retry 10 --retry-delay 5 --retry-all-errors -o /dev/null "$URL"
