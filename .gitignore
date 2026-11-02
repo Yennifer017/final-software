@@ -1,0 +1,15 @@
+# Compilación
+target/
+frontend/dist/
+frontend/.angular/
+node_modules/
+# IDE
+.idea/
+*.iml
+.vscode/
+!frontend/.vscode/
+# Entorno y ejecución local (los secretos NUNCA se suben)
+.env
+logs/
+releases/
+.claude/
