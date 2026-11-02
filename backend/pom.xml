@@ -24,6 +24,7 @@
     <module>api-gateway</module>
     <module>ms-usuarios</module>
     <module>ms-flota</module>
+    <module>ms-viajes</module>
     <module>ms-notificaciones</module>
   </modules>
 
