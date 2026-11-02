@@ -1,0 +1,91 @@
+<main class="content" id="contenido">
+  <div class="page-head"><div><h1>Mi cuenta</h1><p>{{ auth.usuario()?.nombreCompleto }} · NIT {{ auth.usuario()?.nit }}</p></div></div>
+
+  <div class="tabs" role="tablist">
+    <button type="button" class="tab" role="tab" [class.is-active]="tab() === 'historial'" [attr.aria-selected]="tab() === 'historial'" (click)="cambiarTab('historial')">Historial</button>
+    <button type="button" class="tab" role="tab" [class.is-active]="tab() === 'cartera'" [attr.aria-selected]="tab() === 'cartera'" (click)="cambiarTab('cartera')">Cartera digital</button>
+    <button type="button" class="tab" role="tab" [class.is-active]="tab() === 'perfil'" [attr.aria-selected]="tab() === 'perfil'" (click)="cambiarTab('perfil')">Perfil</button>
+  </div>
+
+  @switch (tab()) {
+    @case ('historial') {
+      <section class="card">
+        <div class="filters">
+          <div class="field"><label for="h-t">Tipo</label>
+            <select id="h-t" class="select" [ngModel]="filtroTipo()" (ngModelChange)="filtroTipo.set($event)"><option value="">Todos</option><option value="Boleto">Boletos</option><option value="Alquiler">Alquileres</option></select></div>
+          <div class="field"><label for="h-c">Canal</label>
+            <select id="h-c" class="select" [ngModel]="filtroCanal()" (ngModelChange)="filtroCanal.set($event)"><option value="">Todos</option><option value="EN_LINEA">En línea</option><option value="MOSTRADOR">Mostrador</option></select></div>
+          <div class="field"><label for="h-d">Desde</label><input id="h-d" type="date" class="input" [ngModel]="desde()" (ngModelChange)="desde.set($event)"></div>
+          <div class="field"><label for="h-h">Hasta</label><input id="h-h" type="date" class="input" [ngModel]="hasta()" (ngModelChange)="hasta.set($event)"></div>
+        </div>
+        @if (compras() === null) {
+          <div class="card__body"><div class="esqueleto"></div></div>
+        } @else if (historial().length === 0) {
+          <app-vacio icono="ticket" titulo="Aún no tienes compras" texto="Cuando compres boletos o alquiles un bus aparecerán aquí." />
+        } @else {
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Fecha</th><th>Tipo</th><th>Código</th><th>Detalle</th><th>Asientos</th><th>Canal</th><th>Estado</th><th class="num">Monto</th></tr></thead>
+              <tbody>
+                @for (h of historial(); track h.codigo) {
+                  <tr>
+                    <td>{{ f(h.fecha) }}</td>
+                    <td><span class="row" style="gap:6px;flex-wrap:nowrap"><app-icono [nombre]="h.tipo === 'Boleto' ? 'ticket' : 'calendar-check'" />{{ h.tipo }}</span></td>
+                    <td class="mono">{{ h.codigo }}</td>
+                    <td>{{ h.detalle }}</td>
+                    <td class="mono">{{ h.asientos }}</td>
+                    <td><app-estado [valor]="h.canal" />@if (antesDeCuenta(h)) {<span class="xs muted" style="display:block">enlazada por NIT</span>}</td>
+                    <td><app-estado [valor]="h.estado" /></td>
+                    <td class="num mono">{{ q(h.monto) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination"><span>{{ historial().length }} registro(s)</span></div>
+        }
+      </section>
+    }
+    @case ('cartera') {
+      <div class="split">
+        <div class="stack" style="gap:var(--sp-4)">
+          <div class="wallet"><span class="row small" style="color:#C9D6E8"><app-icono nombre="wallet" />Saldo disponible</span>
+            <span class="wallet__amount">{{ q(cartera()?.saldo ?? 0) }}</span><span class="xs" style="color:#C9D6E8">NIT {{ cartera()?.nit }}</span></div>
+          <div class="card">
+            <div class="card__head"><h2>Movimientos</h2></div>
+            @if (!cartera()?.movimientos?.length) {
+              <app-vacio icono="wallet" titulo="Sin movimientos todavía" texto="Recarga tu cartera para comprar boletos." />
+            } @else {
+              <div class="table-wrap"><table class="table">
+                <thead><tr><th>Fecha</th><th>Tipo</th><th>Concepto</th><th class="num">Monto</th><th class="num">Saldo</th></tr></thead>
+                <tbody>
+                  @for (m of cartera()!.movimientos; track m.id) {
+                    <tr><td>{{ f(m.fecha) }}</td><td><app-estado [valor]="m.tipo" /></td><td>{{ m.concepto }}</td>
+                      <td class="num mono" [style.color]="m.tipo === 'DEBITO' ? 'var(--danger-700)' : 'var(--success-700)'">{{ m.tipo === 'DEBITO' ? '−' : '+' }} {{ q(m.monto) }}</td>
+                      <td class="num mono">{{ q(m.saldoResultante) }}</td></tr>
+                  }
+                </tbody>
+              </table></div>
+            }
+          </div>
+        </div>
+        <form class="card" (ngSubmit)="recargar()">
+          <div class="card__head"><h2>Recargar cartera</h2></div>
+          <div class="card__body stack">
+            <div class="field"><label for="monto">Monto a recargar <span class="req">*</span></label>
+              <div class="input-group"><span class="addon">Q</span><input id="monto" type="number" min="1" max="10000" step="0.01" class="input mono" name="monto" [(ngModel)]="monto" placeholder="0.00"></div>
+              <span class="help">Máximo Q 10,000.00 por recarga.</span></div>
+            <div class="row">
+              @for (m of [100, 250, 500]; track m) {<button type="button" class="btn btn--secondary btn--sm" (click)="monto = m">Q {{ m }}</button>}
+            </div>
+            <div class="field"><label for="fr">Fecha de recarga</label><input id="fr" type="date" class="input" name="fecha" [(ngModel)]="fechaRecarga"></div>
+          </div>
+          <div class="card__foot"><button class="btn btn--primary" [disabled]="recargando()"><app-icono nombre="plus" />{{ recargando() ? 'Recargando…' : 'Recargar' }}</button></div>
+        </form>
+      </div>
+    }
+    @case ('perfil') {
+      <app-perfil-form />
+    }
+  }
+</main>

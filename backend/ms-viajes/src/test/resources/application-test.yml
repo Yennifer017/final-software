@@ -1,0 +1,24 @@
+spring:
+  flyway:
+    clean-disabled: false
+  rabbitmq:
+    listener:
+      simple:
+        retry:
+          initial-interval: 100
+eureka:
+  client:
+    enabled: false
+rutagt:
+  jwt:
+    secret: dGVzdC1zZWNyZXRvLXBhcmEtcHJ1ZWJhcy1kZS1pbnRlZ3JhY2lvbi1ydXRhZ3QtMjAyNg==
+  outbox:
+    intervalo-ms: 200
+logging:
+  level:
+    org.testcontainers: WARN
+    com.github.dockerjava: WARN
+---
+rutagt:
+  ventas:
+    reconciliacion-ms: 3600000

@@ -1,0 +1,125 @@
+<div class="page-head">
+  <div><div class="breadcrumb">Operación <app-icono nombre="chevron-right" /> Alquileres</div><h1>Alquileres de bus</h1><p>Solicitudes en línea y presenciales de tu sucursal.</p></div>
+  <button type="button" class="btn btn--primary" (click)="abrirNuevo()"><app-icono nombre="plus" />Alquiler presencial</button>
+</div>
+
+<div class="tabs" role="tablist">
+  <button type="button" class="tab" role="tab" [class.is-active]="tab() === 'SOLICITADO'" (click)="cambiarTab('SOLICITADO')">Por confirmar precio <span class="badge badge--warning" style="margin-left:6px">{{ cuenta('SOLICITADO') }}</span></button>
+  <button type="button" class="tab" role="tab" [class.is-active]="tab() === 'PRECIO_CONFIRMADO'" (click)="cambiarTab('PRECIO_CONFIRMADO')">Esperando pago ({{ cuenta('PRECIO_CONFIRMADO') }})</button>
+  <button type="button" class="tab" role="tab" [class.is-active]="tab() === 'PAGADO'" (click)="cambiarTab('PAGADO')">Pagados · asignar bus ({{ cuenta('PAGADO') }})</button>
+  <button type="button" class="tab" role="tab" [class.is-active]="tab() === 'CURSO'" (click)="cambiarTab('CURSO')">Asignados y cerrados</button>
+</div>
+
+@if (todos() === null) {
+  <div class="esqueleto"></div>
+} @else if (lista().length === 0) {
+  <div class="card"><app-vacio icono="hourglass" titulo="No hay alquileres en esta etapa" /></div>
+} @else {
+  <div class="split">
+    <section class="card">
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Solicitud</th><th>Cliente</th><th>Recorrido</th><th>Salida</th><th class="num">Pax</th><th class="num">Precio</th></tr></thead>
+        <tbody>
+          @for (a of lista(); track a.id) {
+            <tr class="clicable" [class.fila-activa]="seleccionado()?.id === a.id" (click)="seleccionar(a)" tabindex="0" (keydown.enter)="seleccionar(a)">
+              <td class="mono">{{ a.codigo }}<div><app-estado [valor]="a.canal" /></div></td>
+              <td>{{ a.clienteNombre }}<div class="xs muted">NIT {{ a.clienteNit }}</div></td>
+              <td>{{ a.origen }} → {{ a.destino }}@if (a.idaVuelta) {<span class="badge badge--neutral" style="margin-left:4px">Ida y vuelta</span>}</td>
+              <td class="mono">{{ fh(a.fechaSalida) }}</td>
+              <td class="num">{{ a.pasajeros }}</td>
+              <td class="num mono">{{ q(a.precioFinal ?? a.precioEstimado) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table></div>
+    </section>
+
+    @if (seleccionado(); as a) {
+      <div class="card">
+        <div class="card__head"><h2>Solicitud {{ a.codigo }}</h2><app-estado [valor]="a.estado" /></div>
+        <div class="card__body stack">
+          <div class="summary-line"><span class="muted">Recorrido</span><span>{{ a.origen }} → {{ a.destino }}</span></div>
+          <div class="summary-line"><span class="muted">Salida / retorno</span><span class="mono">{{ fh(a.fechaSalida) }}{{ a.fechaRetorno ? ' – ' + fh(a.fechaRetorno) : '' }}</span></div>
+          <div class="summary-line"><span class="muted">Pasajeros</span><span>{{ a.pasajeros }}</span></div>
+          <div class="summary-line"><span class="muted">Distancia estimada</span><span class="mono">{{ n(a.distanciaKm) }} km</span></div>
+          <div class="summary-line"><span class="muted">Estimado del sistema</span><span class="mono">{{ q(a.precioEstimado) }}</span></div>
+          @if (a.observaciones) {<div class="summary-line"><span class="muted">Observaciones</span><span>{{ a.observaciones }}</span></div>}
+          @switch (a.estado) {
+            @case ('SOLICITADO') {
+              <div class="field"><label for="pf">Precio final <span class="req">*</span></label><div class="input-group"><span class="addon">Q</span><input id="pf" type="number" min="1" step="0.01" class="input mono" [(ngModel)]="precio"></div><span class="help">Puedes confirmar el estimado o modificarlo.</span></div>
+              <div class="field"><label for="fc">Fecha de confirmación</label><input id="fc" type="date" class="input" [(ngModel)]="fechaConfirmacion"></div>
+              <div class="field"><label for="nt">Nota para el cliente</label><textarea id="nt" class="textarea" [(ngModel)]="nota"></textarea></div>
+            }
+            @case ('PRECIO_CONFIRMADO') {
+              <div class="summary-line total"><span>Precio confirmado</span><span class="mono">{{ q(a.precioFinal) }}</span></div>
+              <div class="alert alert--info"><app-icono nombre="wallet" /><div>{{ a.canal === 'EN_LINEA' ? 'El cliente debe pagar con su cartera digital desde el portal.' : 'Solicitud presencial: registra el pago cuando el cliente pague en la sucursal.' }}</div></div>
+            }
+            @case ('PAGADO') {
+              <div class="summary-line total"><span>Pagado ({{ a.formaPago === 'CARTERA' ? 'cartera' : 'efectivo' }})</span><span class="mono">{{ q(a.precioFinal) }}</span></div>
+              @if (viajePrivado()) {
+                <div class="field"><label for="ab">Bus <span class="req">*</span></label>
+                  <select id="ab" class="select" [(ngModel)]="busId"><option value="">Selecciona…</option>
+                    @for (b of buses(); track b.id) {<option [value]="b.id" [disabled]="b.capacidad < a.pasajeros">{{ b.placa }} · {{ b.capacidad }} pax{{ b.capacidad < a.pasajeros ? ' (insuficiente)' : '' }}</option>}</select>
+                  <span class="help">Capacidad mínima: {{ a.pasajeros }}. La disponibilidad se valida al guardar.</span></div>
+                <div class="field"><label for="ac">Chofer <span class="req">*</span></label>
+                  <select id="ac" class="select" [(ngModel)]="choferId"><option value="">Selecciona…</option>
+                    @for (c of choferes(); track c.id) {<option [value]="c.id">{{ c.nombreCompleto }}</option>}</select></div>
+                @if (choferId) {<div class="alert alert--info"><app-icono nombre="badge-percent" /><div>Salario del chofer en este viaje: <b class="mono">{{ salarioDe(choferId) }}</b> (base + 15 %).</div></div>}
+              } @else {
+                <div class="alert alert--warning"><app-icono nombre="hourglass" /><div>Creando el viaje privado… actualiza en unos segundos.</div></div>
+              }
+            }
+            @default {
+              @if (a.busPlaca) {<div class="summary-line"><span class="muted">Bus / chofer</span><span><span class="plate">{{ a.busPlaca }}</span> · {{ a.choferNombre }}</span></div>}
+              @if (a.precioFinal) {<div class="summary-line total"><span>Precio</span><span class="mono">{{ q(a.precioFinal) }}</span></div>}
+              @if (a.nota) {<div class="alert alert--info"><app-icono nombre="info" /><div>{{ a.nota }}</div></div>}
+              @if (a.estado === 'ASIGNADO') {<p class="small muted">La salida y la llegada se registran en «Salidas y llegadas», igual que un viaje regular.</p>}
+            }
+          }
+        </div>
+        <div class="card__foot">
+          @switch (a.estado) {
+            @case ('SOLICITADO') {
+              <button type="button" class="btn btn--secondary" (click)="rechazar(a)">Rechazar</button>
+              <button type="button" class="btn btn--primary" (click)="confirmarPrecio(a)">Confirmar precio</button>
+            }
+            @case ('PRECIO_CONFIRMADO') {
+              <button type="button" class="btn btn--secondary" (click)="rechazar(a)">Rechazar</button>
+              @if (a.canal === 'MOSTRADOR') {<button type="button" class="btn btn--cta" (click)="pagoEfectivo(a)">Registrar pago en efectivo</button>}
+            }
+            @case ('PAGADO') {<button type="button" class="btn btn--primary" (click)="asignar()" [disabled]="!viajePrivado()">Asignar</button>}
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@if (nuevoAbierto()) {
+  <div class="overlay" (click)="nuevoAbierto.set(false)">
+    <form class="drawer" role="dialog" aria-modal="true" aria-labelledby="na-t" [formGroup]="formNuevo" (ngSubmit)="guardarNuevo()"
+          (click)="$event.stopPropagation()" (keydown.escape)="nuevoAbierto.set(false)" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" novalidate>
+      <div class="card__head"><h2 id="na-t">Alquiler presencial</h2><button type="button" class="btn btn--ghost btn--icon" (click)="nuevoAbierto.set(false)" aria-label="Cerrar"><app-icono nombre="x" /></button></div>
+      <div class="card__body stack" style="gap:var(--sp-4)">
+        <div class="form-grid">
+          <div class="field"><label for="n-nit">NIT del cliente <span class="req">*</span></label><input id="n-nit" class="input" formControlName="nit"><app-campo-error [control]="formNuevo.controls.nit" /></div>
+          <div class="field"><label for="n-nom">Nombre <span class="req">*</span></label><input id="n-nom" class="input" formControlName="nombreCliente"><app-campo-error [control]="formNuevo.controls.nombreCliente" /></div>
+          <div class="field full"><label for="n-em">Correo (opcional)</label><input id="n-em" type="email" class="input" formControlName="emailCliente"></div>
+          <div class="field"><label for="n-or">Origen <span class="req">*</span></label><input id="n-or" class="input" formControlName="origen"></div>
+          <div class="field"><label for="n-de">Destino <span class="req">*</span></label><input id="n-de" class="input" formControlName="destino"></div>
+        </div>
+        <app-mapa-selector [puntos]="puntos()" [etiquetas]="['Origen', 'Destino']" (elegido)="elegirPunto($event)" />
+        <span class="help">Clic 1: origen · clic 2: destino.</span>
+        <div class="form-grid">
+          <div class="field"><label for="n-fs">Salida <span class="req">*</span></label><input id="n-fs" type="datetime-local" class="input" formControlName="fechaSalida"></div>
+          <div class="field"><label for="n-pax">Pasajeros <span class="req">*</span></label><input id="n-pax" type="number" min="1" max="80" class="input" formControlName="pasajeros"></div>
+          <label class="check full"><input type="checkbox" formControlName="idaVuelta">Ida y vuelta</label>
+          @if (formNuevo.controls.idaVuelta.value) {<div class="field"><label for="n-fr">Retorno</label><input id="n-fr" type="datetime-local" class="input" formControlName="fechaRetorno"></div>}
+          <div class="field"><label for="n-fsol">Fecha de solicitud</label><input id="n-fsol" type="date" class="input" formControlName="fechaSolicitud"></div>
+          <div class="field full"><label for="n-obs">Observaciones</label><textarea id="n-obs" class="textarea" formControlName="observaciones"></textarea></div>
+        </div>
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" (click)="nuevoAbierto.set(false)">Cancelar</button><button class="btn btn--primary">Registrar solicitud</button></div>
+    </form>
+  </div>
+}
