@@ -26,6 +26,7 @@
     <module>ms-flota</module>
     <module>ms-viajes</module>
     <module>ms-clientes</module>
+    <module>ms-finanzas</module>
     <module>ms-notificaciones</module>
   </modules>
 
