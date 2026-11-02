@@ -1,0 +1,83 @@
+<div class="page-head">
+  <div><div class="breadcrumb">Flota <app-icono nombre="chevron-right" /> Choferes</div><h1>Choferes</h1>
+    <p>{{ pagina()?.totalElements ?? 0 }} choferes</p></div>
+  <div class="row">
+    <button type="button" class="btn btn--secondary" (click)="exportar.reporte('flota/choferes', { activo })" [disabled]="exportar.exportando()"><app-icono nombre="file-down" />Exportar PDF</button>
+    <button type="button" class="btn btn--primary" (click)="nuevo()"><app-icono nombre="user-plus" />Registrar chofer</button>
+  </div>
+</div>
+
+<div class="alert alert--warning"><app-icono nombre="mail" /><div><strong>Recordatorios automáticos de licencia</strong>El sistema envía un correo al chofer y al administrador de la sucursal 30, 15 y 3 días antes del vencimiento.</div></div>
+
+<section class="card">
+  <form class="filters" (ngSubmit)="cargar()">
+    <div class="field" style="flex:1;min-width:220px"><label for="q">Buscar</label><input id="q" class="input" name="q" [(ngModel)]="q" placeholder="Nombre o número de licencia"></div>
+    <div class="field"><label for="tl">Tipo de licencia</label><select id="tl" class="select" name="tipo" [(ngModel)]="tipo" (change)="cargar()"><option value="">Todas</option><option>A</option><option>B</option><option>C</option></select></div>
+    <div class="field"><label for="es">Estado</label><select id="es" class="select" name="activo" [(ngModel)]="activo" (change)="cargar()"><option value="">Todos</option><option value="true">Activo</option><option value="false">Inactivo</option></select></div>
+    <div class="field"><label for="lv">Licencia</label><select id="lv" class="select" name="vence" [(ngModel)]="vence" (change)="cargar()"><option value="">Todas</option><option value="30">Vence en ≤ 30 días</option><option value="0">Vencida</option></select></div>
+    <button class="btn btn--secondary"><app-icono nombre="search" />Buscar</button>
+  </form>
+  @if (pagina() === null) {
+    <div class="card__body"><div class="esqueleto"></div></div>
+  } @else if (pagina()!.content.length === 0) {
+    <app-vacio icono="id-card" titulo="No hay choferes con estos filtros" />
+  } @else {
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>Chofer</th><th>No. licencia</th><th>Tipo</th><th>Vencimiento</th><th>Teléfono</th><th class="num">Salario / viaje</th><th>Estado</th><th class="num">Viajes</th><th><span class="sr-only">Acciones</span></th></tr></thead>
+      <tbody>
+        @for (c of pagina()!.content; track c.id) {
+          <tr>
+            <td><div class="row" style="gap:10px;flex-wrap:nowrap">
+              @if (c.fotoUrl) {<img class="avatar" [src]="c.fotoUrl" [alt]="c.nombreCompleto" loading="lazy">} @else {<span class="avatar">{{ iniciales(c.nombreCompleto) }}</span>}
+              {{ c.nombreCompleto }}</div></td>
+            <td class="mono">{{ c.numeroLicencia }}</td>
+            <td>{{ c.tipoLicencia }}</td>
+            <td><div>{{ f(c.fechaVencimientoLicencia) }}</div>
+              @if (claseVence(c)) {<span class="badge badge--{{ claseVence(c) }}">{{ c.diasParaVencer < 0 ? 'Vencida' : 'Vence en ' + c.diasParaVencer + ' días' }}</span>}</td>
+            <td>{{ c.telefono }}</td>
+            <td class="num mono">{{ q$(c.salarioBaseViaje) }}</td>
+            <td><app-estado [valor]="c.activo" /></td>
+            <td class="num">{{ n(c.totalViajes) }}</td>
+            <td><div class="acciones">
+              <button type="button" class="btn btn--ghost btn--icon" (click)="editar(c)" [attr.aria-label]="'Editar a ' + c.nombreCompleto"><app-icono nombre="pencil" /></button>
+              @if (c.activo) {
+                <button type="button" class="btn btn--ghost btn--icon" (click)="desactivar(c)" [attr.aria-label]="'Desactivar a ' + c.nombreCompleto" title="Desactivar"><app-icono nombre="power" /></button>
+              } @else {<button type="button" class="btn btn--ghost btn--sm" (click)="activar(c)">Reactivar</button>}
+            </div></td>
+          </tr>
+        }
+      </tbody>
+    </table></div>
+    <app-paginador [pagina]="pagina()!.page" [tamano]="pagina()!.size" [total]="pagina()!.totalElements" [paginas]="pagina()!.totalPages" (cambiar)="cargar($event)" />
+  }
+</section>
+<p class="small muted">¿El chofer necesita registrar sus propias salidas y llegadas? Créale un usuario en <a routerLink="/sucursal/personal">Personal de la sucursal</a>.</p>
+
+@if (abierto()) {
+  <div class="overlay" (click)="abierto.set(false)">
+    <form class="drawer" role="dialog" aria-modal="true" aria-labelledby="fc-t" [formGroup]="form" (ngSubmit)="guardar()"
+          (click)="$event.stopPropagation()" (keydown.escape)="abierto.set(false)" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" novalidate>
+      <div class="card__head"><h2 id="fc-t">{{ editando() ? 'Editar chofer' : 'Registrar chofer' }}</h2>
+        <button type="button" class="btn btn--ghost btn--icon" (click)="abierto.set(false)" aria-label="Cerrar"><app-icono nombre="x" /></button></div>
+      <div class="card__body stack" style="gap:var(--sp-4)">
+        <div class="row">
+          @if (vistaPrevia()) {<img class="avatar avatar--lg" [src]="vistaPrevia()" alt="Foto del chofer">} @else {<span class="avatar avatar--lg"><app-icono nombre="user" /></span>}
+          <label class="btn btn--secondary btn--sm" for="foto-chofer"><app-icono nombre="upload" />Subir foto</label>
+          <input id="foto-chofer" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" (change)="elegirFoto($event)">
+        </div>
+        <div class="form-grid">
+          <div class="field full"><label for="c-n">Nombre completo <span class="req">*</span></label><input id="c-n" class="input" formControlName="nombreCompleto"><app-campo-error [control]="form.controls.nombreCompleto" /></div>
+          <div class="field"><label for="c-l">Número de licencia <span class="req">*</span></label><input id="c-l" class="input mono" formControlName="numeroLicencia"><app-campo-error [control]="form.controls.numeroLicencia" /></div>
+          <div class="field"><label for="c-t">Tipo de licencia <span class="req">*</span></label><select id="c-t" class="select" formControlName="tipoLicencia"><option>A</option><option>B</option><option>C</option><option>M</option><option>E</option></select></div>
+          <div class="field"><label for="c-v">Fecha de vencimiento <span class="req">*</span></label><input id="c-v" type="date" class="input" formControlName="fechaVencimientoLicencia"><app-campo-error [control]="form.controls.fechaVencimientoLicencia" /></div>
+          <div class="field"><label for="c-tel">Teléfono <span class="req">*</span></label><input id="c-tel" type="tel" class="input" formControlName="telefono"><app-campo-error [control]="form.controls.telefono" /></div>
+          <div class="field"><label for="c-e">Correo electrónico <span class="req">*</span></label><input id="c-e" type="email" class="input" formControlName="email"><span class="help">Para los recordatorios de licencia.</span><app-campo-error [control]="form.controls.email" /></div>
+          <div class="field"><label for="c-s">Salario base por viaje <span class="req">*</span></label><div class="input-group"><span class="addon">Q</span><input id="c-s" type="number" min="0" step="0.01" class="input mono" formControlName="salarioBaseViaje"></div>
+            <span class="help">En alquiler privado recibe +15 %: {{ q$((form.controls.salarioBaseViaje.value || 0) * 1.15) }}.</span><app-campo-error [control]="form.controls.salarioBaseViaje" /></div>
+        </div>
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" (click)="abierto.set(false)">Cancelar</button>
+        <button class="btn btn--primary" [disabled]="guardando()">{{ guardando() ? 'Guardando…' : 'Guardar chofer' }}</button></div>
+    </form>
+  </div>
+}

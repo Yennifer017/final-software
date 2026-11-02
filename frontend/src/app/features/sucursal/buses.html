@@ -1,0 +1,86 @@
+<div class="page-head">
+  <div><div class="breadcrumb">Flota <app-icono nombre="chevron-right" /> Buses</div><h1>Buses de la sucursal</h1>
+    <p>{{ pagina()?.totalElements ?? 0 }} buses registrados</p></div>
+  <div class="row">
+    <button type="button" class="btn btn--secondary" (click)="pdf()" [disabled]="exportar.exportando()"><app-icono nombre="file-down" />Exportar PDF</button>
+    <button type="button" class="btn btn--primary" (click)="nuevo()"><app-icono nombre="plus" />Registrar bus</button>
+  </div>
+</div>
+
+<section class="card">
+  <form class="filters" (ngSubmit)="cargar()">
+    <div class="field" style="flex:1;min-width:220px"><label for="q">Buscar</label><input id="q" class="input" name="q" [(ngModel)]="q" placeholder="Placa, marca o modelo"></div>
+    <div class="field"><label for="est">Estado operativo</label>
+      <select id="est" class="select" name="estado" [(ngModel)]="estado" (change)="cargar()">
+        <option value="">Todos</option><option value="DISPONIBLE">Disponible</option><option value="EN_RUTA">En ruta</option><option value="EN_TALLER">En taller</option><option value="INACTIVO">Inactivo</option>
+      </select></div>
+    <button class="btn btn--secondary"><app-icono nombre="search" />Buscar</button>
+    <button type="button" class="btn btn--ghost" (click)="limpiar()">Limpiar filtros</button>
+  </form>
+  @if (pagina() === null) {
+    <div class="card__body"><div class="esqueleto"></div></div>
+  } @else if (pagina()!.content.length === 0) {
+    <app-vacio icono="bus" titulo="No hay buses con estos filtros" texto="Registra un bus o cambia los filtros." />
+  } @else {
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>Foto</th><th>Placa</th><th>Marca / modelo</th><th>Año</th><th class="num">Capacidad</th><th>Estado</th><th>Chofer actual</th><th class="num">Kilometraje</th><th class="num">Viajes</th><th><span class="sr-only">Acciones</span></th></tr></thead>
+      <tbody>
+        @for (b of pagina()!.content; track b.id) {
+          <tr>
+            <td>@if (b.fotoUrl) {<img class="thumb" [src]="b.fotoUrl" [alt]="'Bus ' + b.placa" loading="lazy">} @else {<span class="thumb" style="display:grid;place-items:center"><app-icono nombre="bus" /></span>}</td>
+            <td><span class="plate">{{ b.placa }}</span></td>
+            <td>{{ b.marca }} {{ b.modelo }}</td>
+            <td>{{ b.anio }}</td>
+            <td class="num">{{ b.capacidad }}</td>
+            <td><app-estado [valor]="b.estadoOperativo" /></td>
+            <td>@if (b.choferActualNombre) {{{ b.choferActualNombre }}} @else {<span class="muted">—</span>}</td>
+            <td class="num mono">{{ n(b.kilometrajeActual) }} km</td>
+            <td class="num">{{ n(b.totalViajes) }}</td>
+            <td><div class="acciones">
+              <button type="button" class="btn btn--ghost btn--icon" (click)="editar(b)" [attr.aria-label]="'Editar bus ' + b.placa"><app-icono nombre="pencil" /></button>
+              @if (b.activo) {
+                <button type="button" class="btn btn--ghost btn--icon" (click)="desactivar(b)" [attr.aria-label]="'Desactivar bus ' + b.placa" title="Desactivar"><app-icono nombre="power" /></button>
+              } @else {
+                <button type="button" class="btn btn--ghost btn--sm" (click)="activar(b)">Reactivar</button>
+              }
+            </div></td>
+          </tr>
+        }
+      </tbody>
+    </table></div>
+    <app-paginador [pagina]="pagina()!.page" [tamano]="pagina()!.size" [total]="pagina()!.totalElements" [paginas]="pagina()!.totalPages" (cambiar)="cargar($event)" />
+  }
+</section>
+
+<div class="alert alert--info"><app-icono nombre="info" /><div><strong>Los buses no se eliminan, solo se desactivan.</strong>Un bus solo puede desactivarse si no tiene viajes programados ni en tránsito.</div></div>
+
+@if (abierto()) {
+  <div class="overlay" (click)="abierto.set(false)">
+    <form class="drawer" role="dialog" aria-modal="true" aria-labelledby="fb-t" [formGroup]="form" (ngSubmit)="guardar()"
+          (click)="$event.stopPropagation()" (keydown.escape)="abierto.set(false)" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" novalidate>
+      <div class="card__head"><h2 id="fb-t">{{ editando() ? 'Editar bus ' + editando()!.placa : 'Registrar bus' }}</h2>
+        <button type="button" class="btn btn--ghost btn--icon" (click)="abierto.set(false)" aria-label="Cerrar"><app-icono nombre="x" /></button></div>
+      <div class="card__body stack" style="gap:var(--sp-4)">
+        <label class="dropzone" for="foto-bus">
+          @if (vistaPrevia()) {<img [src]="vistaPrevia()" alt="Vista previa" style="max-height:140px;border-radius:var(--radius-md)">} @else {<app-icono nombre="image-plus" />}
+          <b>{{ vistaPrevia() ? 'Cambiar foto' : 'Subir foto del bus' }}</b><span class="xs">JPG, PNG o WebP, máximo 5 MB</span>
+          <input id="foto-bus" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" (change)="elegirFoto($event)">
+        </label>
+        <div class="form-grid">
+          <div class="field"><label for="b-placa">Placa <span class="req">*</span></label><input id="b-placa" class="input mono" formControlName="placa" placeholder="P-123ABC"><app-campo-error [control]="form.controls.placa" /></div>
+          <div class="field"><label for="b-anio">Año de fabricación <span class="req">*</span></label><input id="b-anio" type="number" class="input" formControlName="anio"><app-campo-error [control]="form.controls.anio" /></div>
+          <div class="field"><label for="b-marca">Marca <span class="req">*</span></label><input id="b-marca" class="input" formControlName="marca"><app-campo-error [control]="form.controls.marca" /></div>
+          <div class="field"><label for="b-modelo">Modelo <span class="req">*</span></label><input id="b-modelo" class="input" formControlName="modelo"><app-campo-error [control]="form.controls.modelo" /></div>
+          <div class="field"><label for="b-cap">Capacidad de pasajeros <span class="req">*</span></label><input id="b-cap" type="number" min="1" max="80" class="input" formControlName="capacidad"><app-campo-error [control]="form.controls.capacidad" /></div>
+          <div class="field"><label for="b-km">Kilometraje actual <span class="req">*</span></label><input id="b-km" type="number" min="0" class="input mono" formControlName="kilometrajeActual"><app-campo-error [control]="form.controls.kilometrajeActual" /></div>
+          <div class="field full"><label for="b-est">Estado operativo <span class="req">*</span></label>
+            <select id="b-est" class="select" formControlName="estadoOperativo" [attr.disabled]="editando()?.estadoOperativo === 'EN_RUTA' ? true : null">
+              <option value="DISPONIBLE">Disponible</option><option value="EN_TALLER">En taller</option></select>
+            <span class="help">«En ruta» lo asigna el sistema al registrar una salida.</span></div>
+        </div>
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" (click)="abierto.set(false)">Cancelar</button>
+        <button class="btn btn--primary" [disabled]="guardando()">{{ guardando() ? 'Guardando…' : 'Guardar bus' }}</button></div>
+    </form>
+  </div>
+}
