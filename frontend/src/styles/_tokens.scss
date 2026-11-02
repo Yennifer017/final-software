@@ -1,0 +1,87 @@
+/* =====================================================================
+   RutaGT — Sistema de diseño de los mockups
+   ---------------------------------------------------------------------
+   Este archivo es la FUENTE DE VERDAD visual del proyecto.
+   Copiado de mockups/assets/styles.css (fuente de verdad del diseño).
+   Si cambia el mockup, actualizar aquí también.
+   NO usar colores hex directamente en componentes: usar siempre var(--*)
+   ===================================================================== */
+
+
+/* ============================ TOKENS ================================ */
+:root {
+  /* ---- Marca (azul noche: confianza, institucional) ---- */
+  --brand-950: #081A33;
+  --brand-900: #0B2545;   /* sidebar, encabezados oscuros */
+  --brand-800: #13315C;
+  --brand-700: #1A4478;
+  --brand-600: #1D5BA6;   /* PRIMARIO: botones, links, foco */
+  --brand-500: #3A78C4;
+  --brand-100: #DCE8F7;
+  --brand-50:  #EEF4FB;
+
+  /* ---- Acento (amarillo "camioneta": energía, llamado a la acción) ---- */
+  --accent-600: #C77A0A;
+  --accent-500: #E8971E;  /* CTA de compra, asiento seleccionado */
+  --accent-400: #F2B04E;
+  --accent-100: #FDF0DA;
+
+  /* ---- Neutros cálidos ---- */
+  --gray-950: #16191D;
+  --gray-900: #1E2329;    /* texto principal */
+  --gray-700: #3E4651;
+  --gray-600: #545D69;    /* texto secundario (contraste 6.4:1 sobre blanco) */
+  --gray-500: #6B7480;
+  --gray-400: #9AA1AA;
+  --gray-300: #C9CDD2;
+  --gray-200: #E3E5E8;    /* bordes */
+  --gray-100: #F0F1F3;
+  --gray-50:  #F7F7F5;    /* fondo de la app */
+  --white:    #FFFFFF;
+
+  /* ---- Semánticos (estados) ---- */
+  --success-700: #146C3A; --success-500: #1F9D55; --success-100: #DDF3E6;
+  --warning-700: #8A4B00; --warning-500: #D97706; --warning-100: #FDEBD0;
+  --danger-700:  #9B1C1C; --danger-500:  #D23B3B; --danger-100:  #FBE1E1;
+  --info-700:    #1A4478; --info-500:    #3A78C4; --info-100:    #DCE8F7;
+
+  /* ---- Alias semánticos (los que usan los componentes) ---- */
+  --color-bg:            var(--gray-50);
+  --color-surface:       var(--white);
+  --color-surface-2:     var(--gray-100);
+  --color-border:        var(--gray-200);
+  --color-border-strong: var(--gray-300);
+  --color-text:          var(--gray-900);
+  --color-text-muted:    var(--gray-600);
+  --color-primary:       var(--brand-600);
+  --color-primary-hover: var(--brand-700);
+  --color-on-primary:    var(--white);
+  --color-cta:           var(--accent-500);
+  --color-cta-hover:     var(--accent-600);
+  --color-on-cta:        var(--gray-950);
+  --color-focus:         var(--brand-500);
+
+  /* ---- Tipografía ---- */
+  --font-sans: 'Fira Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Fira Code', ui-monospace, monospace;  /* placas, códigos, montos */
+  --text-xs: 12px; --text-sm: 14px; --text-base: 16px; --text-lg: 18px;
+  --text-xl: 20px; --text-2xl: 24px; --text-3xl: 30px; --text-4xl: 36px;
+
+  /* ---- Espaciado (escala 4px) ---- */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px;
+  --sp-6: 24px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px; --sp-16: 64px;
+
+  /* ---- Radios, sombras, movimiento ---- */
+  --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px; --radius-full: 999px;
+  --shadow-sm: 0 1px 2px rgba(11,37,69,.06), 0 1px 3px rgba(11,37,69,.08);
+  --shadow-md: 0 4px 12px rgba(11,37,69,.08), 0 2px 4px rgba(11,37,69,.06);
+  --shadow-lg: 0 16px 40px rgba(11,37,69,.18);
+  --ease: cubic-bezier(.2,.8,.2,1);
+  --dur-fast: 150ms; --dur: 220ms;
+
+  /* ---- Layout ---- */
+  --sidebar-w: 256px;
+  --topbar-h: 64px;
+  --content-max: 1280px;
+}
+

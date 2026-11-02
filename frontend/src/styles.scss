@@ -1,0 +1,68 @@
+/* Estilos globales: sistema de diseño de los mockups + ajustes propios de la app Angular. */
+@use 'styles/tokens';
+@use 'styles/components';
+
+/* ---------- Íconos (componente app-icono) ---------- */
+.icono { display: inline-flex; flex-shrink: 0; }
+.icono svg { width: 20px; height: 20px; stroke-width: 2; }
+.error .icono svg { width: 14px; height: 14px; }
+.empty .icono svg { width: 40px; height: 40px; color: var(--gray-400); }
+.btn--sm .icono svg { width: 18px; height: 18px; }
+
+/* ---------- Accesibilidad ---------- */
+.saltar { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--white); padding: 8px 12px; border-radius: var(--radius-sm); }
+.saltar:focus { left: 8px; }
+.boton-enlace { background: none; border: 0; width: calc(100% - 0px); font: inherit; cursor: pointer; text-align: left; margin: 2px 0 !important; }
+.sidebar__nombre { color: #fff; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sidebar__brand { text-decoration: none !important; }
+
+/* ---------- Toasts ---------- */
+.toasts { position: fixed; right: 16px; bottom: 16px; z-index: 1000; display: grid; gap: 8px; width: min(420px, calc(100vw - 32px)); }
+.toast { box-shadow: var(--shadow-lg); align-items: center; animation: entrar var(--dur) var(--ease); }
+.toast__texto { flex: 1; display: grid; }
+@keyframes entrar { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Diálogos (Angular CDK) con el estilo .modal del mockup ---------- */
+.overlay-fondo { background: rgba(8, 26, 51, .55); }
+.dialogo { max-width: calc(100vw - 32px); }
+.dialogo .modal { width: min(560px, calc(100vw - 32px)); }
+.dialogo-drawer { position: fixed !important; top: 0; right: 0; height: 100vh; }
+.dialogo-drawer .drawer { position: static; }
+
+/* ---------- Estados de carga ---------- */
+.cargando { opacity: .6; pointer-events: none; }
+.esqueleto { background: linear-gradient(90deg, var(--gray-100), var(--gray-200), var(--gray-100)); background-size: 200% 100%;
+  animation: brillo 1.2s infinite; border-radius: var(--radius-md); min-height: 120px; }
+@keyframes brillo { to { background-position: -200% 0; } }
+
+/* ---------- Responsive: sidebar como menú en móvil ---------- */
+.solo-movil { display: none; }
+.fondo-menu { display: none; }
+@media (max-width: 860px) {
+  .solo-movil { display: inline-flex; }
+  .oculto-movil { display: none; }
+  .app .sidebar { display: flex; position: fixed; left: 0; top: 0; z-index: 60; width: min(300px, 85vw);
+    transform: translateX(-100%); transition: transform var(--dur) var(--ease); }
+  .app.menu-abierto .sidebar { transform: none; }
+  .app.menu-abierto .fondo-menu { display: block; position: fixed; inset: 0; z-index: 55; background: rgba(8,26,51,.45); border: 0; }
+  .portal-nav { gap: var(--sp-3); padding: 0 var(--sp-4); }
+  .portal-nav .salir { display: none; }
+}
+
+/* ---------- Tablas con acciones ---------- */
+.acciones { display: flex; gap: 4px; justify-content: flex-end; }
+.clicable { cursor: pointer; }
+.fila-activa td { background: var(--brand-50); }
+
+/* ---------- Impresión (comprobante de boletos) ---------- */
+@media print {
+  .sidebar, .topbar, .portal-nav, .no-imprimir, .toasts { display: none !important; }
+  .app { display: block; }
+  body { background: #fff; }
+  .card { box-shadow: none; }
+}
+
+/* ---------- Ajustes finos ---------- */
+.tabs { overflow-y: hidden; scrollbar-width: thin; }
+.table td.num, .table th.num, .summary-line .mono { white-space: nowrap; }
+.overlay-fondo.cdk-overlay-backdrop-showing { opacity: 1; }
