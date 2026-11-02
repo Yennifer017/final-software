@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Mockups y guía de estilo</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .swatch { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--color-border); }
+    .swatch__color { height: 72px; }
+    .swatch__meta { padding: var(--sp-3); font-size: var(--text-xs); }
+    .swatch__meta b { display:block; font-size: var(--text-sm); }
+    .screens a { display:flex; gap: var(--sp-3); align-items:center; padding: var(--sp-4); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text); }
+    .screens a:hover { border-color: var(--color-primary); text-decoration: none; box-shadow: var(--shadow-md); }
+    .screens a [data-lucide] { color: var(--color-primary); }
+  </style>
+</head>
+<body>
+  <header class="hero" style="padding-bottom:var(--sp-10)">
+    <div class="hero__inner">
+      <div class="row" style="margin-bottom:var(--sp-4)"><span class="logo-mark"><i data-lucide="bus-front"></i></span><strong>RutaGT</strong></div>
+      <h1>Mockups y guía de estilo</h1>
+      <p>Referencia visual obligatoria para construir el frontend Angular. Cada pantalla de la aplicación debe seguir estos colores, tipografía y componentes.</p>
+    </div>
+  </header>
+
+  <main class="content">
+    <section class="card">
+      <div class="card__head"><h2>1. Pantallas</h2><span class="muted small">Haz clic para abrir cada mockup</span></div>
+      <div class="card__body stack">
+        <h3 class="small muted">Público y cliente (rol CLIENTE)</h3>
+        <div class="grid grid-3 screens">
+          <a href="login.html"><i data-lucide="log-in"></i><div><b>Ingreso y registro</b><div class="xs muted">Login + crear cuenta con NIT/DPI</div></div></a>
+          <a href="cliente-viajes.html"><i data-lucide="search"></i><div><b>Buscar viajes</b><div class="xs muted">Viajes regulares disponibles</div></div></a>
+          <a href="cliente-asientos.html"><i data-lucide="armchair"></i><div><b>Asientos y pago</b><div class="xs muted">Selección + pago con cartera</div></div></a>
+          <a href="cliente-cuenta.html"><i data-lucide="wallet"></i><div><b>Mi cuenta</b><div class="xs muted">Perfil, cartera, historial</div></div></a>
+          <a href="cliente-alquiler.html"><i data-lucide="calendar-plus"></i><div><b>Solicitar alquiler</b><div class="xs muted">Cotización de viaje privado</div></div></a>
+        </div>
+        <h3 class="small muted" style="margin-top:var(--sp-4)">Administrador de sucursal (rol ADMIN_SUCURSAL / CAJERO / CHOFER)</h3>
+        <div class="grid grid-3 screens">
+          <a href="sucursal-dashboard.html"><i data-lucide="layout-dashboard"></i><div><b>Inicio sucursal</b><div class="xs muted">KPIs y salidas del día</div></div></a>
+          <a href="sucursal-buses.html"><i data-lucide="bus"></i><div><b>Buses</b><div class="xs muted">Listado, filtro, formulario con foto</div></div></a>
+          <a href="sucursal-choferes.html"><i data-lucide="id-card"></i><div><b>Choferes</b><div class="xs muted">Licencias por vencer</div></div></a>
+          <a href="sucursal-rutas-viajes.html"><i data-lucide="route"></i><div><b>Rutas y viajes</b><div class="xs muted">Programación de horarios</div></div></a>
+          <a href="sucursal-operacion.html"><i data-lucide="clock"></i><div><b>Salidas y llegadas</b><div class="xs muted">Registro irreversible</div></div></a>
+          <a href="sucursal-mostrador.html"><i data-lucide="ticket"></i><div><b>Venta en mostrador</b><div class="xs muted">Venta presencial por NIT</div></div></a>
+          <a href="sucursal-alquileres.html"><i data-lucide="calendar-check"></i><div><b>Alquileres</b><div class="xs muted">Confirmar precio, asignar bus</div></div></a>
+          <a href="sucursal-taller.html"><i data-lucide="wrench"></i><div><b>Gastos de taller</b><div class="xs muted">Encabezado + detalle por categoría</div></div></a>
+        </div>
+        <h3 class="small muted" style="margin-top:var(--sp-4)">Administrador del sistema (rol ADMIN_SISTEMA)</h3>
+        <div class="grid grid-3 screens">
+          <a href="admin-dashboard.html"><i data-lucide="gauge"></i><div><b>Inicio sistema</b><div class="xs muted">Resumen global</div></div></a>
+          <a href="admin-sucursales-usuarios.html"><i data-lucide="building-2"></i><div><b>Sucursales y usuarios</b><div class="xs muted">Alta, desactivación</div></div></a>
+          <a href="admin-configuracion.html"><i data-lucide="settings"></i><div><b>Configuración</b><div class="xs muted">Depreciación, tarifas, categorías</div></div></a>
+          <a href="reporte-financiero.html"><i data-lucide="chart-column"></i><div><b>Reportes</b><div class="xs muted">Agrupado, subtotales, PDF</div></div></a>
+          <a href="reporte-mapa-rutas.html"><i data-lucide="map"></i><div><b>Mapa de rutas</b><div class="xs muted">Leaflet por sucursal</div></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card__head"><h2>2. Paleta de colores</h2><span class="muted small">Tokens en <code>assets/styles.css</code></span></div>
+      <div class="card__body stack">
+        <div class="grid grid-4">
+          <div class="swatch"><div class="swatch__color" style="background:var(--brand-900)"></div><div class="swatch__meta"><b>Azul noche 900</b>#0B2545 · sidebar, navbar</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--brand-600)"></div><div class="swatch__meta"><b>Primario 600</b>#1D5BA6 · botones, links, foco</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--brand-50)"></div><div class="swatch__meta"><b>Primario 50</b>#EEF4FB · hover de filas, subtotales</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--accent-500)"></div><div class="swatch__meta"><b>Acento 500</b>#E8971E · CTA de compra, asiento elegido</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--gray-900)"></div><div class="swatch__meta"><b>Texto</b>#1E2329</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--gray-600)"></div><div class="swatch__meta"><b>Texto secundario</b>#545D69</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--gray-200)"></div><div class="swatch__meta"><b>Borde</b>#E3E5E8</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--gray-50)"></div><div class="swatch__meta"><b>Fondo app</b>#F7F7F5</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--success-500)"></div><div class="swatch__meta"><b>Éxito</b>#1F9D55 · activo, pagado</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--warning-500)"></div><div class="swatch__meta"><b>Advertencia</b>#D97706 · por vencer, pendiente</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--danger-500)"></div><div class="swatch__meta"><b>Peligro</b>#D23B3B · inactivo, irreversible</div></div>
+          <div class="swatch"><div class="swatch__color" style="background:var(--info-500)"></div><div class="swatch__meta"><b>Información</b>#3A78C4 · en ruta, programado</div></div>
+        </div>
+        <p class="small muted">Regla: el amarillo de acento se usa <b>solo</b> para la acción principal de compra/pago y para el asiento seleccionado. El resto de botones primarios son azules. Los estados siempre llevan texto además del color.</p>
+      </div>
+    </section>
+
+    <section class="grid grid-2">
+      <div class="card">
+        <div class="card__head"><h2>3. Tipografía</h2></div>
+        <div class="card__body stack">
+          <div><span class="xs muted">Fira Sans 700 · 36px · títulos de portal</span><div style="font-size:36px;font-weight:700">Viaja seguro</div></div>
+          <div><span class="xs muted">Fira Sans 600 · 24px · título de página</span><h1>Buses de la sucursal</h1></div>
+          <div><span class="xs muted">Fira Sans 400 · 16px · cuerpo (mínimo)</span><p>Selecciona los asientos que deseas comprar.</p></div>
+          <div><span class="xs muted">Fira Code 600 · placas, códigos, montos en tablas</span><div><span class="plate">P-123ABC</span> <span class="mono">Q 1,250.00</span></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><h2>4. Componentes</h2></div>
+        <div class="card__body stack">
+          <div class="row"><button class="btn btn--primary"><i data-lucide="plus"></i>Primario</button><button class="btn btn--cta"><i data-lucide="credit-card"></i>Pagar (CTA)</button><button class="btn btn--secondary">Secundario</button><button class="btn btn--ghost">Ghost</button><button class="btn btn--danger">Peligro</button></div>
+          <div class="row"><span class="badge badge--success">Activo</span><span class="badge badge--info">En ruta</span><span class="badge badge--warning">En taller</span><span class="badge badge--danger">Inactivo</span><span class="badge badge--neutral">Borrador</span></div>
+          <div class="field has-error"><label for="d1">Placa <span class="req">*</span></label><input id="d1" class="input" value="P-12"><span class="error"><i data-lucide="circle-alert"></i>Formato inválido. Ejemplo: P-123ABC</span></div>
+          <div class="field"><label for="d2">Fecha de pago</label><input id="d2" type="date" class="input" data-today><span class="help">Inicia con la fecha actual; puedes cambiarla.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card__head"><h2>5. Reglas de UX obligatorias</h2></div>
+      <div class="card__body">
+        <ol class="stack small" style="margin:0;padding-left:20px">
+          <li><b>Fechas:</b> todo input de fecha/hora inicia con la fecha actual (<code>data-today</code>) y es editable.</li>
+          <li><b>Etiquetas visibles</b> en todos los campos; el error aparece debajo del campo, no solo arriba.</li>
+          <li><b>Acciones irreversibles</b> (registrar salida/llegada, pagar, desactivar) siempre piden confirmación en un modal que resume los datos.</li>
+          <li><b>Listados y reportes:</b> barra de filtros arriba, botón «Exportar PDF» siempre visible, estado vacío amigable.</li>
+          <li><b>Feedback:</b> botón con spinner mientras carga; toast verde al guardar; mensaje claro si falla.</li>
+          <li><b>Accesibilidad:</b> contraste ≥ 4.5:1, foco visible, objetivos táctiles ≥ 44px, iconos SVG (Lucide), nunca emojis.</li>
+          <li><b>Responsive:</b> probar en 375px, 768px, 1024px y 1440px. En móvil el sidebar se vuelve menú hamburguesa.</li>
+          <li><b>Montos:</b> siempre con «Q» y dos decimales, alineados a la derecha en tablas.</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
