@@ -1,0 +1,141 @@
+# =====================================================================
+#  RutaGT — sistema completo (producción o demostración local)
+#    cp .env.example .env    # completar valores (ver GUIA.md §11)
+#    docker compose up -d --build
+#  Abrir: https://<DOMAIN>  (o http://localhost)
+#  Correo de desarrollo (perfil "dev"): docker compose --profile dev up -d  → http://localhost:8025
+# =====================================================================
+name: rutagt
+
+x-servicio: &servicio
+  restart: unless-stopped
+  env_file: .env
+  environment: &entorno
+    DB_HOST: postgres
+    RABBITMQ_HOST: rabbitmq
+    EUREKA_URL: http://discovery-server:8761/eureka
+    TZ: America/Guatemala
+  depends_on: &dependencias
+    postgres: { condition: service_healthy }
+    rabbitmq: { condition: service_healthy }
+    discovery-server: { condition: service_healthy }
+  deploy:
+    resources:
+      limits: { memory: 420m }
+
+x-salud: &salud
+  interval: 15s
+  timeout: 5s
+  retries: 20
+  start_period: 40s
+
+services:
+  # ---------------- Infraestructura ----------------
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      TZ: America/Guatemala
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      retries: 20
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports: ["127.0.0.1:15672:15672"]   # consola solo accesible desde el propio servidor (túnel SSH)
+    volumes: [rabbitdata:/var/lib/rabbitmq]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      retries: 20
+
+  mailpit:   # SMTP falso para demostraciones locales (perfil dev)
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    profiles: [dev]
+    ports: ["127.0.0.1:8025:8025"]
+
+  # ---------------- Plataforma ----------------
+  discovery-server:
+    build: { context: ./backend, args: { SERVICIO: discovery-server } }
+    image: rutagt/discovery-server:1.0.0
+    restart: unless-stopped
+    environment: { TZ: America/Guatemala, EUREKA_HOSTNAME: discovery-server }
+    healthcheck: { test: ["CMD", "wget", "-qO-", "http://localhost:8761/actuator/health"], <<: *salud }
+
+  api-gateway:
+    <<: *servicio
+    build: { context: ./backend, args: { SERVICIO: api-gateway } }
+    image: rutagt/api-gateway:1.0.0
+    depends_on:
+      discovery-server: { condition: service_healthy }
+    ports: ["127.0.0.1:8080:8080"]     # Swagger y Postman desde el servidor; el público entra por Caddy
+    healthcheck: { test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"], <<: *salud }
+
+  # ---------------- Microservicios ----------------
+  ms-usuarios:
+    <<: *servicio
+    build: { context: ./backend, args: { SERVICIO: ms-usuarios } }
+    image: rutagt/ms-usuarios:1.0.0
+    healthcheck: { test: ["CMD", "wget", "-qO-", "http://localhost:8081/actuator/health"], <<: *salud }
+
+  ms-flota:
+    <<: *servicio
+    build: { context: ./backend, args: { SERVICIO: ms-flota } }
+    image: rutagt/ms-flota:1.0.0
+    healthcheck: { test: ["CMD", "wget", "-qO-", "http://localhost:8082/actuator/health"], <<: *salud }
+
+  ms-viajes:
+    <<: *servicio
+    build: { context: ./backend, args: { SERVICIO: ms-viajes } }
+    image: rutagt/ms-viajes:1.0.0
+    healthcheck: { test: ["CMD", "wget", "-qO-", "http://localhost:8083/actuator/health"], <<: *salud }
+
+  ms-clientes:
+    <<: *servicio
+    build: { context: ./backend, args: { SERVICIO: ms-clientes } }
+    image: rutagt/ms-clientes:1.0.0
+    healthcheck: { test: ["CMD", "wget", "-qO-", "http://localhost:8084/actuator/health"], <<: *salud }
+
+  ms-finanzas:
+    <<: *servicio
+    build: { context: ./backend, args: { SERVICIO: ms-finanzas } }
+    image: rutagt/ms-finanzas:1.0.0
+    healthcheck: { test: ["CMD", "wget", "-qO-", "http://localhost:8085/actuator/health"], <<: *salud }
+
+  ms-notificaciones:
+    <<: *servicio
+    build: { context: ./backend, args: { SERVICIO: ms-notificaciones } }
+    environment:
+      <<: *entorno
+      MAIL_HOST: ${MAIL_HOST_EN_DOCKER:-mailpit}
+    image: rutagt/ms-notificaciones:1.0.0
+    healthcheck: { test: ["CMD", "wget", "-qO-", "http://localhost:8086/actuator/health"], <<: *salud }
+
+  # ---------------- Frontend + HTTPS ----------------
+  web:
+    build: ./frontend
+    image: rutagt/web:1.0.0
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    ports: ["${WEB_HTTP_PORT:-80}:80", "${WEB_HTTPS_PORT:-443}:443"]
+    volumes: [caddydata:/data, caddyconfig:/config]
+    depends_on:
+      api-gateway: { condition: service_healthy }
+
+volumes:
+  pgdata:
+  rabbitdata:
+  caddydata:
+  caddyconfig:

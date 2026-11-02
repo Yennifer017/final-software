@@ -1,0 +1,30 @@
+# DOMAIN=localhost → HTTP local con certificado interno; DOMAIN=midominio.com → HTTPS automático con Let's Encrypt.
+{$DOMAIN:localhost} {
+	encode zstd gzip
+
+	# API: mismo dominio que el frontend (sin CORS en producción)
+	handle /api/* {
+		reverse_proxy api-gateway:8080
+	}
+	# Swagger agregado del gateway
+	handle /swagger-ui* {
+		reverse_proxy api-gateway:8080
+	}
+	handle /v3/api-docs* {
+		reverse_proxy api-gateway:8080
+	}
+	handle /api-docs/* {
+		reverse_proxy api-gateway:8080
+	}
+	handle /webjars/* {
+		reverse_proxy api-gateway:8080
+	}
+
+	# Aplicación Angular (SPA): toda ruta desconocida devuelve index.html
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+		header /index.html Cache-Control "no-cache"
+	}
+}
