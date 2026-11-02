@@ -1,0 +1,67 @@
+<header class="hero">
+  <div class="hero__inner">
+    <h1>¿A dónde viajas hoy?</h1>
+    <p>Viajes regulares entre nuestras sucursales de Guatemala.</p>
+  </div>
+</header>
+
+<main class="content" id="contenido">
+  <form class="card search" (ngSubmit)="buscar()" aria-label="Buscar viajes">
+    <div class="card__body">
+      <div class="field"><label for="o">Origen</label>
+        <select id="o" class="select" name="origen" [(ngModel)]="origenId">
+          <option value="">Cualquier sucursal</option>
+          @for (s of sucursales(); track s.id) {<option [value]="s.id">{{ s.nombre }}</option>}
+        </select></div>
+      <div class="field"><label for="d">Destino</label>
+        <select id="d" class="select" name="destino" [(ngModel)]="destinoId">
+          <option value="">Cualquier sucursal</option>
+          @for (s of sucursales(); track s.id) {<option [value]="s.id" [disabled]="s.id === origenId">{{ s.nombre }}</option>}
+        </select></div>
+      <div class="field"><label for="f">Fecha</label><input id="f" type="date" class="input" name="fecha" [(ngModel)]="fecha"></div>
+      <button class="btn btn--primary"><app-icono nombre="search" />Buscar</button>
+    </div>
+  </form>
+
+  <div class="row between">
+    <div><h2>{{ titulo() }}</h2>
+      <p class="muted small">{{ viajes() === null ? 'Buscando…' : viajes()!.length + ' viaje(s) el ' + fmtFecha(fecha) }}</p></div>
+    <div class="field" style="min-width:220px"><label for="ord" class="sr-only">Ordenar</label>
+      <select id="ord" class="select" [ngModel]="orden()" (ngModelChange)="orden.set($event)" name="orden">
+        <option value="hora">Ordenar: hora de salida</option><option value="precio">Precio más bajo</option><option value="libres">Más asientos libres</option>
+      </select></div>
+  </div>
+
+  @if (error()) {<div class="alert alert--danger"><app-icono nombre="circle-alert" /><div>{{ error() }}</div></div>}
+
+  <section class="stack" aria-label="Resultados" aria-live="polite">
+    @if (viajes() === null) {
+      <div class="esqueleto"></div><div class="esqueleto"></div>
+    } @else if (ordenados().length === 0) {
+      <div class="card"><app-vacio icono="bus" titulo="No hay viajes para esta búsqueda" texto="Prueba con otra fecha u otra sucursal de origen o destino." /></div>
+    } @else {
+      @for (v of ordenados(); track v.id) {
+        <article class="card trip">
+          <div class="stack">
+            <div class="trip__route">
+              <div><div class="trip__time">{{ hora(v.salidaProgramada) }}</div><div class="trip__city">{{ v.origen }}</div></div>
+              <div class="trip__line"></div>
+              <div class="right"><div class="trip__time">{{ hora(v.llegadaEstimada) }}</div><div class="trip__city">{{ v.destino }}</div></div>
+            </div>
+            <div class="row small muted"><app-icono nombre="bus" />{{ v.busMarca }} {{ v.busModelo }} · <span class="plate">{{ v.busPlaca }}</span>
+              <span class="badge badge--{{ disponibilidad(v) }}">{{ v.asientosDisponibles === 0 ? 'Agotado' : v.asientosDisponibles + ' de ' + v.capacidad + ' libres' }}</span>
+              <span>{{ num(v.distanciaKm) }} km</span></div>
+          </div>
+          <div class="stack" style="justify-items:end">
+            <div class="trip__price" [class.muted]="v.asientosDisponibles === 0">{{ q(v.precioBoleto) }}</div>
+            @if (v.asientosDisponibles > 0) {
+              <a class="btn btn--cta" [routerLink]="['/portal/viajes', v.id]">Elegir asientos</a>
+            } @else {
+              <button class="btn btn--secondary" disabled>Sin asientos</button>
+            }
+          </div>
+        </article>
+      }
+    }
+  </section>
+</main>
