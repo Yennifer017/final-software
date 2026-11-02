@@ -179,7 +179,7 @@ class ClientesIT extends AbstractIT {
         await().atMost(Duration.ofSeconds(10)).until(() -> jdbc.queryForObject(
                 "SELECT valor FROM tarifa WHERE clave = 'TARIFA_ALQUILER_KM'", BigDecimal.class).intValue() == 15);
 
-        LocalDateTime salida = LocalDateTime.now().plusDays(10).withNano(0);
+        LocalDateTime salida = LocalDate.now().plusDays(10).atTime(8, 0);
         String cot = """
                 {"origenLat":14.8347,"origenLng":-91.5180,"destinoLat":14.7406,"destinoLng":-91.1590,
                  "idaVuelta":true,"fechaSalida":"%s","fechaRetorno":"%s"}""".formatted(salida, salida.plusHours(10));
