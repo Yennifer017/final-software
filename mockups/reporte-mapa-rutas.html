@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Mapa de rutas</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body data-role="ADMIN_SISTEMA" data-page="mapa">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Reportes</span><span class="topbar__spacer"></span><span class="avatar">AL</span></header>
+      <main class="content">
+        <div class="page-head">
+          <div><div class="breadcrumb">Reportes <i data-lucide="chevron-right"></i> Mapa de rutas</div><h1>Mapa de rutas por sucursal</h1><p>Rutas cuyo origen es la sucursal seleccionada.</p></div>
+          <div class="row">
+            <div class="field"><label for="suc">Sucursal de origen</label><select id="suc" class="select"><option>Quetzaltenango</option><option>Guatemala Central</option></select></div>
+            <button class="btn btn--secondary" style="align-self:end"><i data-lucide="file-down"></i>Exportar PDF</button>
+          </div>
+        </div>
+        <div class="split">
+          <div id="map" class="map" role="img" aria-label="Mapa con las rutas desde Quetzaltenango"></div>
+          <section class="card">
+            <div class="card__head"><h2>3 rutas</h2></div>
+            <div class="table-wrap"><table class="table">
+              <thead><tr><th>Destino</th><th class="num">Km</th><th class="num">Precio</th></tr></thead>
+              <tbody>
+                <tr><td><span class="row" style="gap:8px"><span style="width:12px;height:12px;border-radius:3px;background:#1D5BA6"></span>Guatemala</span></td><td class="num mono">201</td><td class="num mono">Q 85.00</td></tr>
+                <tr><td><span class="row" style="gap:8px"><span style="width:12px;height:12px;border-radius:3px;background:#E8971E"></span>Huehuetenango</span></td><td class="num mono">90</td><td class="num mono">Q 60.00</td></tr>
+                <tr><td><span class="row" style="gap:8px"><span style="width:12px;height:12px;border-radius:3px;background:#1F9D55"></span>Retalhuleu</span></td><td class="num mono">68</td><td class="num mono">Q 45.00</td></tr>
+              </tbody>
+            </table></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    const map = L.map('map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+    const origen = [14.8347, -91.5180];
+    const destinos = [
+      ['Guatemala', [14.6349, -90.5069], '#1D5BA6', 201, 85],
+      ['Huehuetenango', [15.3197, -91.4710], '#E8971E', 90, 60],
+      ['Retalhuleu', [14.5379, -91.6773], '#1F9D55', 68, 45],
+    ];
+    L.circleMarker(origen, { radius: 10, color: '#0B2545', fillColor: '#0B2545', fillOpacity: 1 }).addTo(map).bindTooltip('Quetzaltenango (origen)', { permanent: true, direction: 'top' });
+    const bounds = [origen];
+    destinos.forEach(([n, p, c, km, q]) => {
+      L.polyline([origen, p], { color: c, weight: 5, opacity: .9 }).addTo(map).bindPopup(`<b>Xela → ${n}</b><br>${km} km · Q ${q}.00`);
+      L.circleMarker(p, { radius: 7, color: c, fillColor: '#fff', fillOpacity: 1, weight: 3 }).addTo(map).bindTooltip(n);
+      bounds.push(p);
+    });
+    map.fitBounds(bounds, { padding: [40, 40] });
+  </script>
+</body>
+</html>

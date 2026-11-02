@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Configuración</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SISTEMA" data-page="configuracion">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Administración del sistema</span><span class="topbar__spacer"></span><span class="avatar">AL</span></header>
+      <main class="content">
+        <div class="page-head"><div><div class="breadcrumb">Administración <i data-lucide="chevron-right"></i> Configuración</div><h1>Configuración y catálogos</h1></div></div>
+
+        <div class="grid grid-2" style="align-items:start">
+          <form class="card" onsubmit="return false">
+            <div class="card__head"><h2>Parámetros financieros</h2></div>
+            <div class="card__body stack" style="gap:var(--sp-4)">
+              <div class="field"><label for="dep">Depreciación por kilómetro <span class="req">*</span></label><div class="input-group"><span class="addon">Q</span><input id="dep" class="input mono" value="1.85"></div><span class="help">Cambiarlo no altera la depreciación de viajes ya registrados.</span></div>
+              <div class="field"><label for="tk">Tarifa de alquiler por km</label><div class="input-group"><span class="addon">Q</span><input id="tk" class="input mono" value="14.00"></div></div>
+              <div class="field"><label for="td">Tarifa de alquiler por día</label><div class="input-group"><span class="addon">Q</span><input id="td" class="input mono" value="800.00"></div></div>
+              <div class="field"><label for="vf">Vigente desde</label><input id="vf" type="date" class="input" data-today></div>
+            </div>
+            <div class="card__foot"><button class="btn btn--primary">Guardar nueva versión</button></div>
+          </form>
+
+          <section class="card">
+            <div class="card__head"><h2>Historial de depreciación por km</h2></div>
+            <div class="table-wrap"><table class="table">
+              <thead><tr><th>Vigente desde</th><th>Hasta</th><th class="num">Q / km</th><th>Cambió</th></tr></thead>
+              <tbody>
+                <tr><td>01/09/2026</td><td><span class="badge badge--success">Actual</span></td><td class="num mono">1.85</td><td>Ana López</td></tr>
+                <tr><td>01/01/2026</td><td>31/08/2026</td><td class="num mono">1.60</td><td>Ana López</td></tr>
+              </tbody>
+            </table></div>
+          </section>
+        </div>
+
+        <section class="card">
+          <div class="card__head"><h2>Categorías de gasto de taller</h2>
+            <form class="row" onsubmit="return false"><label for="nc" class="sr-only">Nueva categoría</label><input id="nc" class="input" placeholder="Nueva categoría" style="width:220px"><button class="btn btn--primary btn--sm"><i data-lucide="plus"></i>Agregar</button></form></div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Categoría</th><th class="num">Gastos asociados</th><th>Estado</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>Llantas</td><td class="num">58</td><td><span class="badge badge--success">Activa</span></td><td class="right"><button class="btn btn--secondary btn--sm">Desactivar</button> <button class="btn btn--ghost btn--icon" disabled aria-label="No se puede eliminar" title="Tiene gastos asociados: solo se puede desactivar"><i data-lucide="trash-2"></i></button></td></tr>
+              <tr><td>Motor</td><td class="num">21</td><td><span class="badge badge--success">Activa</span></td><td class="right"><button class="btn btn--secondary btn--sm">Desactivar</button> <button class="btn btn--ghost btn--icon" disabled aria-label="No se puede eliminar"><i data-lucide="trash-2"></i></button></td></tr>
+              <tr><td>Aire acondicionado</td><td class="num">0</td><td><span class="badge badge--success">Activa</span></td><td class="right"><button class="btn btn--secondary btn--sm">Desactivar</button> <button class="btn btn--ghost btn--icon" aria-label="Eliminar"><i data-lucide="trash-2"></i></button></td></tr>
+              <tr><td>Carrocería</td><td class="num">9</td><td><span class="badge badge--danger">Inactiva</span></td><td class="right"><button class="btn btn--secondary btn--sm">Reactivar</button></td></tr>
+            </tbody>
+          </table></div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

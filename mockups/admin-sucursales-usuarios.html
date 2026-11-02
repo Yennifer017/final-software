@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Sucursales y usuarios</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body data-role="ADMIN_SISTEMA" data-page="sucursales">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Administración del sistema</span><span class="topbar__spacer"></span><span class="avatar">AL</span></header>
+      <main class="content" data-tabs-scope>
+        <div class="page-head">
+          <div><div class="breadcrumb">Administración <i data-lucide="chevron-right"></i> Sucursales y usuarios</div><h1>Sucursales y usuarios</h1></div>
+          <div class="row"><button class="btn btn--secondary" data-open="form-usuario"><i data-lucide="user-plus"></i>Nuevo usuario</button><button class="btn btn--primary" data-open="form-sucursal"><i data-lucide="plus"></i>Nueva sucursal</button></div>
+        </div>
+        <div class="tabs" role="tablist" data-tabs>
+          <button class="tab is-active" data-target="suc">Sucursales</button>
+          <button class="tab" data-target="usr">Usuarios del personal</button>
+        </div>
+
+        <section id="suc" class="tab-panel card">
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Código</th><th>Sucursal</th><th>Departamento</th><th>Dirección</th><th>Teléfono</th><th>Administradores</th><th>Estado</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="mono">GUA-01</td><td>Guatemala Central</td><td>Guatemala</td><td>Calz. Aguilar Batres 34-70 z.11</td><td>2440-1100</td><td>2</td><td><span class="badge badge--success">Activa</span></td><td><button class="btn btn--ghost btn--icon" aria-label="Editar"><i data-lucide="pencil"></i></button></td></tr>
+              <tr><td class="mono">XEL-01</td><td>Quetzaltenango</td><td>Quetzaltenango</td><td>7a Av. 3-30 z.2</td><td>7761-2200</td><td>1</td><td><span class="badge badge--success">Activa</span></td><td><button class="btn btn--ghost btn--icon" aria-label="Editar"><i data-lucide="pencil"></i></button></td></tr>
+              <tr><td class="mono">COB-01</td><td>Cobán</td><td>Alta Verapaz</td><td>1a Calle 5-12 z.1</td><td>7951-4400</td><td><span class="badge badge--danger">0 · requerido</span></td><td><span class="badge badge--warning">Sin administrador</span></td><td><button class="btn btn--ghost btn--icon" aria-label="Editar"><i data-lucide="pencil"></i></button></td></tr>
+            </tbody>
+          </table></div>
+        </section>
+
+        <section id="usr" class="tab-panel card" hidden>
+          <div class="filters">
+            <div class="field"><label for="u-r">Rol</label><select id="u-r" class="select"><option>Todos</option><option>Administrador del sistema</option><option>Administrador de sucursal</option><option>Cajero</option><option>Chofer</option></select></div>
+            <div class="field"><label for="u-s">Sucursal</label><select id="u-s" class="select"><option>Todas</option></select></div>
+            <div class="field"><label for="u-e">Estado</label><select id="u-e" class="select"><option>Activos</option><option>Inactivos</option></select></div>
+          </div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Sucursal</th><th>Estado</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>Ana López</td><td>ana.lopez@rutagt.com</td><td>Admin. sistema</td><td>—</td><td><span class="badge badge--success">Activo</span></td><td><button class="btn btn--secondary btn--sm" disabled title="Debe existir al menos un administrador del sistema activo">Desactivar</button></td></tr>
+              <tr><td>Carlos Pérez</td><td>carlos.perez@rutagt.com</td><td>Admin. sucursal</td><td>Quetzaltenango</td><td><span class="badge badge--success">Activo</span></td><td><button class="btn btn--secondary btn--sm">Desactivar</button></td></tr>
+              <tr><td>Lucía Gómez</td><td>lucia.gomez@rutagt.com</td><td>Cajero</td><td>Guatemala Central</td><td><span class="badge badge--danger">Inactivo</span></td><td><button class="btn btn--secondary btn--sm">Reactivar</button></td></tr>
+            </tbody>
+          </table></div>
+          <div class="card__body"><p class="xs muted"><i data-lucide="info" style="width:14px;height:14px;vertical-align:-2px"></i> Los usuarios no se eliminan, solo se desactivan. Siempre debe quedar al menos un administrador del sistema activo.</p></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="overlay" id="form-sucursal" hidden>
+    <form class="drawer" role="dialog" aria-modal="true" aria-labelledby="fs-t" onsubmit="return false">
+      <div class="card__head"><h2 id="fs-t">Nueva sucursal</h2><button type="button" class="btn btn--ghost btn--icon" data-close aria-label="Cerrar"><i data-lucide="x"></i></button></div>
+      <div class="card__body stack" style="gap:var(--sp-4)">
+        <div class="form-grid">
+          <div class="field"><label for="s-c">Código <span class="req">*</span></label><input id="s-c" class="input mono" placeholder="XEL-01"></div>
+          <div class="field"><label for="s-n">Nombre <span class="req">*</span></label><input id="s-n" class="input"></div>
+          <div class="field"><label for="s-dep">Departamento <span class="req">*</span></label><select id="s-dep" class="select"><option>Quetzaltenango</option></select></div>
+          <div class="field"><label for="s-mun">Municipio <span class="req">*</span></label><input id="s-mun" class="input"></div>
+          <div class="field full"><label for="s-d">Dirección <span class="req">*</span></label><input id="s-d" class="input"></div>
+          <div class="field"><label for="s-t">Teléfono <span class="req">*</span></label><input id="s-t" class="input"></div>
+          <div class="field"><label for="s-e">Correo</label><input id="s-e" type="email" class="input"></div>
+        </div>
+        <div class="field"><label>Ubicación (clic en el mapa) <span class="req">*</span></label><div id="map" class="map map--sm"></div><span class="help mono">Lat 14.8347 · Lng −91.5180 — se usa para el mapa de rutas.</span></div>
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" data-close>Cancelar</button><button class="btn btn--primary">Guardar sucursal</button></div>
+    </form>
+  </div>
+
+  <div class="overlay" id="form-usuario" hidden>
+    <form class="modal card" role="dialog" aria-modal="true" aria-labelledby="fu-t" onsubmit="return false">
+      <div class="card__head"><h2 id="fu-t">Nuevo usuario del personal</h2><button type="button" class="btn btn--ghost btn--icon" data-close aria-label="Cerrar"><i data-lucide="x"></i></button></div>
+      <div class="card__body form-grid">
+        <div class="field full"><label for="fu-n">Nombre completo <span class="req">*</span></label><input id="fu-n" class="input"></div>
+        <div class="field"><label for="fu-e">Correo <span class="req">*</span></label><input id="fu-e" type="email" class="input"></div>
+        <div class="field"><label for="fu-r">Rol <span class="req">*</span></label><select id="fu-r" class="select"><option>Administrador de sucursal</option><option>Administrador del sistema</option><option>Cajero</option></select></div>
+        <div class="field"><label for="fu-s">Sucursal <span class="req">*</span></label><select id="fu-s" class="select"><option>Cobán</option></select></div>
+        <div class="field"><label for="fu-nit">NIT <span class="req">*</span></label><input id="fu-nit" class="input"></div>
+        <div class="field"><label for="fu-dpi">DPI <span class="req">*</span></label><input id="fu-dpi" class="input mono"></div>
+        <div class="field"><label for="fu-t">Teléfono <span class="req">*</span></label><input id="fu-t" class="input"></div>
+        <div class="field full"><label for="fu-d">Dirección <span class="req">*</span></label><input id="fu-d" class="input"></div>
+        <div class="alert alert--info full"><i data-lucide="mail"></i><div>Se enviará una contraseña temporal al correo; deberá cambiarla en su primer ingreso.</div></div>
+      </div>
+      <div class="card__foot"><button type="button" class="btn btn--secondary" data-close>Cancelar</button><button class="btn btn--primary">Crear usuario</button></div>
+    </form>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    let map;
+    document.querySelector('[data-open="form-sucursal"]').addEventListener('click', () => setTimeout(() => {
+      if (map) return map.invalidateSize();
+      map = L.map('map').setView([14.8347, -91.518], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+      L.marker([14.8347, -91.518]).addTo(map);
+    }, 50));
+  </script>
+</body>
+</html>

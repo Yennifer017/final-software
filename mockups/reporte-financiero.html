@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Reportes</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SISTEMA" data-page="rep-financiero">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Reportes</span><span class="topbar__spacer"></span><span class="avatar">AL</span></header>
+      <main class="content" data-tabs-scope>
+        <div class="page-head">
+          <div><div class="breadcrumb">Reportes</div><h1>Reportes</h1><p>Patrón único para TODOS los reportes: filtros → tabla agrupada con subtotales → total → Exportar PDF.</p></div>
+        </div>
+
+        <div class="tabs" role="tablist" data-tabs>
+          <button class="tab is-active" data-target="ganancias">Ingresos, gastos y ganancias</button>
+          <button class="tab" data-target="rutas">Rutas más demandadas</button>
+          <button class="tab" data-target="taller">Taller por categoría</button>
+        </div>
+
+        <!-- GANANCIAS (mismo layout para Ingresos y Gastos) -->
+        <section id="ganancias" class="tab-panel card">
+          <div class="filters">
+            <div class="field"><label for="g-tipo">Reporte</label><select id="g-tipo" class="select"><option>Ganancias</option><option>Ingresos</option><option>Gastos</option></select></div>
+            <div class="field"><label for="g-d">Desde</label><input id="g-d" type="date" class="input"></div>
+            <div class="field"><label for="g-h">Hasta</label><input id="g-h" type="date" class="input"></div>
+            <div class="field"><label for="g-s">Sucursal (opcional)</label><select id="g-s" class="select"><option>Todas</option><option>Guatemala Central</option><option>Quetzaltenango</option></select></div>
+            <button class="btn btn--primary"><i data-lucide="filter"></i>Generar</button>
+            <span class="topbar__spacer"></span>
+            <button class="btn btn--secondary"><i data-lucide="file-down"></i>Exportar PDF</button>
+          </div>
+          <div class="card__body small muted" style="padding-bottom:0">Sin fechas = todos los registros. Sucursales en orden alfabético.</div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Fecha</th><th>Concepto</th><th>Referencia</th><th class="num">Ingresos</th><th class="num">Costos</th><th class="num">Ganancia</th></tr></thead>
+            <tbody>
+              <tr class="group"><td colspan="6">Guatemala Central</td></tr>
+              <tr><td>01/10/2026</td><td>Venta de boletos (en línea)</td><td class="mono">V-1022</td><td class="num mono">Q 3,230.00</td><td class="num mono">—</td><td class="num"></td></tr>
+              <tr><td>01/10/2026</td><td>Combustible</td><td class="mono">V-1022</td><td class="num mono">—</td><td class="num mono">Q 1,180.00</td><td class="num"></td></tr>
+              <tr><td>01/10/2026</td><td>Depreciación (202 km × Q 1.85)</td><td class="mono">P-482KLM</td><td class="num mono">—</td><td class="num mono">Q 373.70</td><td class="num"></td></tr>
+              <tr><td>03/10/2026</td><td>Alquiler privado</td><td class="mono">A-0188</td><td class="num mono">Q 3,950.00</td><td class="num mono">—</td><td class="num"></td></tr>
+              <tr class="subtotal"><td colspan="3">Subtotal Guatemala Central</td><td class="num mono">Q 7,180.00</td><td class="num mono">Q 1,553.70</td><td class="num mono">Q 5,626.30</td></tr>
+              <tr class="group"><td colspan="6">Quetzaltenango</td></tr>
+              <tr><td>02/10/2026</td><td>Venta de boletos (mostrador)</td><td class="mono">V-1030</td><td class="num mono">Q 2,550.00</td><td class="num mono">—</td><td class="num"></td></tr>
+              <tr><td>04/10/2026</td><td>Taller: Llantas, Cambio de aceite</td><td class="mono">T-0091</td><td class="num mono">—</td><td class="num mono">Q 7,650.00</td><td class="num"></td></tr>
+              <tr class="subtotal"><td colspan="3">Subtotal Quetzaltenango</td><td class="num mono">Q 2,550.00</td><td class="num mono">Q 7,650.00</td><td class="num mono" style="color:var(--danger-700)">− Q 5,100.00</td></tr>
+              <tr class="total"><td colspan="3">TOTAL GLOBAL</td><td class="num mono">Q 9,730.00</td><td class="num mono">Q 9,203.70</td><td class="num mono">Q 526.30</td></tr>
+            </tbody>
+          </table></div>
+        </section>
+
+        <!-- RUTAS MÁS DEMANDADAS -->
+        <section id="rutas" class="tab-panel card" hidden>
+          <div class="filters">
+            <div class="field"><label for="r-d">Desde</label><input id="r-d" type="date" class="input"></div>
+            <div class="field"><label for="r-h">Hasta</label><input id="r-h" type="date" class="input"></div>
+            <button class="btn btn--primary"><i data-lucide="filter"></i>Generar</button>
+            <span class="topbar__spacer"></span>
+            <button class="btn btn--secondary"><i data-lucide="file-down"></i>Exportar PDF</button>
+          </div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>#</th><th>Ruta</th><th class="num">Distancia</th><th class="num">Precio</th><th class="num">Viajes</th><th class="num">Ocupación prom.</th><th class="num">Boletos vendidos</th><th class="num">Ingreso</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Quetzaltenango → Guatemala</td><td class="num mono">201 km</td><td class="num mono">Q 85.00</td><td class="num">62</td><td class="num">88%</td><td class="num"><b>2,401</b></td><td class="num mono">Q 204,085.00</td></tr>
+              <tr><td>2</td><td>Guatemala → Quetzaltenango</td><td class="num mono">201 km</td><td class="num mono">Q 85.00</td><td class="num">60</td><td class="num">81%</td><td class="num"><b>2,140</b></td><td class="num mono">Q 181,900.00</td></tr>
+              <tr><td>3</td><td>Guatemala → Cobán</td><td class="num mono">213 km</td><td class="num mono">Q 90.00</td><td class="num">31</td><td class="num">74%</td><td class="num"><b>918</b></td><td class="num mono">Q 82,620.00</td></tr>
+              <tr class="total"><td colspan="6">TOTAL BOLETOS VENDIDOS</td><td class="num">5,459</td><td class="num mono">Q 468,605.00</td></tr>
+            </tbody>
+          </table></div>
+        </section>
+
+        <!-- TALLER POR CATEGORÍA -->
+        <section id="taller" class="tab-panel card" hidden>
+          <div class="filters">
+            <div class="field"><label for="t-d">Desde</label><input id="t-d" type="date" class="input"></div>
+            <div class="field"><label for="t-h">Hasta</label><input id="t-h" type="date" class="input"></div>
+            <div class="field"><label for="t-s">Sucursal</label><select id="t-s" class="select"><option>Todas</option></select></div>
+            <div class="field"><label for="t-b">Bus</label><select id="t-b" class="select"><option>Todos</option></select></div>
+            <button class="btn btn--primary"><i data-lucide="filter"></i>Generar</button>
+            <span class="topbar__spacer"></span>
+            <button class="btn btn--secondary"><i data-lucide="file-down"></i>Exportar PDF</button>
+          </div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Bus</th><th>Fecha</th><th>Descripción</th><th>Tipo</th><th class="num">Monto</th></tr></thead>
+            <tbody>
+              <tr class="group"><td colspan="5">Llantas</td></tr>
+              <tr><td><span class="plate">P-552QRT</span></td><td>04/10/2026</td><td>4 llantas 295/80 R22.5</td><td>Repuesto</td><td class="num mono">Q 6,400.00</td></tr>
+              <tr><td><span class="plate">P-552QRT</span></td><td>04/10/2026</td><td>Montaje y balanceo</td><td>Mano de obra</td><td class="num mono">Q 400.00</td></tr>
+              <tr class="subtotal"><td colspan="4">Total Llantas</td><td class="num mono">Q 6,800.00</td></tr>
+              <tr class="group"><td colspan="5">Motor</td></tr>
+              <tr><td><span class="plate">P-552QRT</span></td><td>12/09/2026</td><td>Reparación de culata</td><td>Mano de obra</td><td class="num mono">Q 5,200.00</td></tr>
+              <tr class="subtotal"><td colspan="4">Total Motor</td><td class="num mono">Q 5,200.00</td></tr>
+              <tr class="total"><td colspan="4">GRAN TOTAL</td><td class="num mono">Q 12,000.00</td></tr>
+            </tbody>
+          </table></div>
+        </section>
+
+        <div class="empty card" style="padding:var(--sp-8)"><i data-lucide="search-x"></i><b>Ejemplo de estado vacío</b><span class="small">No hay registros para los filtros seleccionados. Prueba ampliando el rango de fechas.</span></div>
+      </main>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

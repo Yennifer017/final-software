@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RutaGT · Inicio sistema</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-role="ADMIN_SISTEMA" data-page="dashboard">
+  <div class="app">
+    <aside class="sidebar" data-sidebar></aside>
+    <div class="main">
+      <header class="topbar"><span class="topbar__title">Administración del sistema</span><span class="topbar__spacer"></span><span class="avatar">AL</span></header>
+      <main class="content">
+        <div class="page-head">
+          <div><h1>Resumen global</h1><p>Todas las sucursales · octubre 2026</p></div>
+          <div class="row"><div class="field"><label for="d1" class="sr-only">Desde</label><input id="d1" type="date" class="input"></div><div class="field"><label for="d2" class="sr-only">Hasta</label><input id="d2" type="date" class="input" data-today></div></div>
+        </div>
+        <section class="grid grid-4">
+          <div class="card kpi"><span class="kpi__label"><i data-lucide="banknote"></i>Ingresos</span><span class="kpi__value mono">Q 1.24 M</span><span class="kpi__delta up">▲ 6% vs. mes anterior</span></div>
+          <div class="card kpi"><span class="kpi__label"><i data-lucide="receipt"></i>Gastos</span><span class="kpi__value mono">Q 0.81 M</span><span class="kpi__delta down">▲ 9% vs. mes anterior</span></div>
+          <div class="card kpi"><span class="kpi__label"><i data-lucide="piggy-bank"></i>Ganancia neta</span><span class="kpi__value mono">Q 0.43 M</span><span class="kpi__delta up">Margen 34.7%</span></div>
+          <div class="card kpi"><span class="kpi__label"><i data-lucide="building-2"></i>Sucursales activas</span><span class="kpi__value">6</span><span class="kpi__delta muted">9 administradores</span></div>
+        </section>
+        <section class="card">
+          <div class="card__head"><h2>Ganancia por sucursal</h2><a href="reporte-financiero.html" class="small">Ver reporte completo</a></div>
+          <div class="card__body stack">
+            <div class="row between small"><span>Guatemala</span><span class="mono">Q 182,400</span></div><div class="bar"><span style="width:100%"></span></div>
+            <div class="row between small"><span>Quetzaltenango</span><span class="mono">Q 121,050</span></div><div class="bar"><span style="width:66%"></span></div>
+            <div class="row between small"><span>Huehuetenango</span><span class="mono">Q 64,900</span></div><div class="bar"><span style="width:36%"></span></div>
+            <div class="row between small"><span>Cobán</span><span class="mono">Q 41,200</span></div><div class="bar"><span style="width:23%"></span></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
