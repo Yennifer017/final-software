@@ -92,4 +92,3 @@ docker-compose.yml  Sistema completo · docker-compose.infra.yml: solo infraestr
 | `scripts/reiniciar-datos.sh` | Borra y recrea la infraestructura de desarrollo |
 | `scripts/generar_postman.py` | Regenera la colección y los entornos de Postman |
 | `scripts/empaquetar.sh` | Binarios de la versión en `releases/` (JAR, frontend y checksums) para publicar como *release* |
-| `scripts/commits.sh "Nombre" "correo"` | Crea el historial de Git por fases del PLAN en un repositorio nuevo |
