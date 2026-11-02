@@ -1,0 +1,77 @@
+<main class="content" id="contenido">
+  <div class="page-head"><div><h1>Alquilar un bus para viaje privado</h1><p>Cualquier origen y destino. Te damos un precio estimado y la sucursal lo confirma.</p></div></div>
+
+  @if (!auth.tieneRol('CLIENTE')) {
+    <div class="alert alert--info"><app-icono nombre="info" /><div><strong>Necesitas una cuenta de cliente para solicitar alquileres.</strong>
+      <a routerLink="/login" [queryParams]="{ volver: '/portal/alquiler' }">Ingresa</a> o <a routerLink="/registro">crea tu cuenta</a>; el pago se hace con tu cartera digital.</div></div>
+  }
+
+  <div class="split">
+    <form class="card" [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+      <div class="card__head"><h2>Datos del viaje</h2></div>
+      <div class="card__body stack" style="gap:var(--sp-4)">
+        <div class="form-grid">
+          <div class="field full"><label for="suc">Sucursal que atenderá <span class="req">*</span></label>
+            <select id="suc" class="select" formControlName="sucursalId" (change)="usarSucursalComoOrigen()">
+              @for (s of sucursales(); track s.id) {<option [value]="s.id">{{ s.nombre }}</option>}
+            </select></div>
+          <div class="field"><label for="or">Origen <span class="req">*</span></label>
+            <input id="or" class="input" formControlName="origen"><span class="help">Primer clic en el mapa.</span><app-campo-error [control]="form.controls.origen" /></div>
+          <div class="field"><label for="de">Destino <span class="req">*</span></label>
+            <input id="de" class="input" formControlName="destino" placeholder="Ej.: Panajachel, Sololá"><span class="help">Segundo clic en el mapa. <button type="button" class="btn btn--ghost btn--sm" style="min-height:auto;padding:0 4px" (click)="limpiarDestino()">Cambiar punto</button></span><app-campo-error [control]="form.controls.destino" /></div>
+        </div>
+        <app-mapa-selector [puntos]="puntos()" [etiquetas]="['Origen', 'Destino']" (elegido)="elegirPunto($event)" />
+        <div class="form-grid">
+          <div class="field"><label for="fs">Fecha y hora de salida <span class="req">*</span></label><input id="fs" type="datetime-local" class="input" formControlName="fechaSalida"></div>
+          <div class="field"><label for="pax">Pasajeros <span class="req">*</span></label><input id="pax" type="number" min="1" max="80" class="input" formControlName="pasajeros"><app-campo-error [control]="form.controls.pasajeros" /></div>
+          <label class="check full"><input type="checkbox" formControlName="idaVuelta">Ida y vuelta</label>
+          @if (form.controls.idaVuelta.value) {
+            <div class="field"><label for="fr">Fecha y hora de retorno</label><input id="fr" type="datetime-local" class="input" formControlName="fechaRetorno"></div>
+          }
+          <div class="field"><label for="fsol">Fecha de solicitud</label><input id="fsol" type="date" class="input" formControlName="fechaSolicitud"></div>
+          <div class="field full"><label for="obs">Observaciones</label><textarea id="obs" class="textarea" formControlName="observaciones" placeholder="Ej.: excursión escolar, necesitamos parada en Los Encuentros"></textarea></div>
+        </div>
+      </div>
+      <div class="card__foot"><button class="btn btn--primary" [disabled]="enviando() || !auth.tieneRol('CLIENTE')"><app-icono nombre="send" />{{ enviando() ? 'Enviando…' : 'Enviar solicitud' }}</button></div>
+    </form>
+
+    <aside class="stack" style="gap:var(--sp-4);position:sticky;top:88px">
+      <div class="card">
+        <div class="card__head"><h2>Precio estimado</h2><span class="badge badge--warning">Por confirmar</span></div>
+        <div class="card__body">
+          @if (cotizacion(); as c) {
+            <div class="summary-line"><span class="muted">Distancia aprox.</span><span class="mono">{{ n(c.distanciaKm) }} km{{ form.controls.idaVuelta.value ? ' × 2' : '' }}</span></div>
+            <div class="summary-line"><span class="muted">Tarifa por km</span><span class="mono">{{ q(c.tarifaKm) }}</span></div>
+            <div class="summary-line"><span class="muted">Días de servicio</span><span class="mono">{{ c.dias }} × {{ q(c.tarifaDia) }}</span></div>
+            <div class="summary-line total"><span>Estimado</span><span class="mono">{{ q(c.estimado) }}</span></div>
+          } @else {
+            <p class="small muted">Ubica el origen y el destino en el mapa para calcular el precio.</p>
+          }
+          <p class="xs muted" style="margin-top:var(--sp-3)">La sucursal puede ajustar el precio. Pagarás con tu cartera cuando lo confirme.</p>
+        </div>
+      </div>
+      @if (mios().length) {
+        <div class="card">
+          <div class="card__head"><h2>Mis solicitudes</h2></div>
+          <div class="card__body">
+            <ol class="timeline">
+              @for (a of mios(); track a.id) {
+                <li>
+                  <span class="dot" [class.done]="a.estado === 'ASIGNADO'" [class.now]="a.estado === 'PRECIO_CONFIRMADO'"><app-icono [nombre]="a.estado === 'SOLICITADO' ? 'hourglass' : a.estado === 'PRECIO_CONFIRMADO' ? 'badge-dollar-sign' : 'bus'" /></span>
+                  <div><b>{{ a.codigo }} · {{ a.origen }} → {{ a.destino }}</b>
+                    <div class="xs muted">{{ fh(a.fechaSalida) }} · {{ a.pasajeros }} pax</div>
+                    <div class="row" style="margin-top:6px"><app-estado [valor]="a.estado" />
+                      <span class="mono small">{{ q(a.precioFinal ?? a.precioEstimado) }}</span></div>
+                    @if (a.nota) {<div class="xs muted">Nota: {{ a.nota }}</div>}
+                    @if (a.busPlaca) {<div class="xs">Bus <span class="plate">{{ a.busPlaca }}</span> · {{ a.choferNombre }}</div>}
+                    @if (a.estado === 'PRECIO_CONFIRMADO') {<button type="button" class="btn btn--cta btn--sm" style="margin-top:8px" (click)="pagar(a)">Pagar con cartera</button>}
+                  </div>
+                </li>
+              }
+            </ol>
+          </div>
+        </div>
+      }
+    </aside>
+  </div>
+</main>
