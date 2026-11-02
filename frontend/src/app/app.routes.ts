@@ -11,6 +11,10 @@ const roles = (...r: Rol[]) => ({ roles: r });
 /** Cada pantalla corresponde a un mockup de la carpeta /mockups (ver GUIA.md §8). Todas se cargan bajo demanda. */
 export const routes: Routes = [
   { path: '', pathMatch: 'full', canActivate: [inicioGuard], children: [] },
+  { path: 'login', title: 'Ingresar · RutaGT', loadComponent: () => import('./features/auth/acceso').then(m => m.Acceso) },
+  { path: 'registro', title: 'Crear cuenta · RutaGT', data: { tab: 'registro' }, loadComponent: () => import('./features/auth/acceso').then(m => m.Acceso) },
+  { path: 'cambiar-password', title: 'Cambiar contraseña · RutaGT', canActivate: [conSesion],
+    loadComponent: () => import('./features/auth/cambiar-password').then(m => m.CambiarPassword) },
 
   // ---------- Portal público y de clientes ----------
   {
