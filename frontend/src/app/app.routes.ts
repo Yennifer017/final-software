@@ -44,6 +44,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/sucursal/operacion').then(m => m.Operacion) },
       { path: 'mostrador', title: 'Venta en mostrador · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL', 'CAJERO'),
         loadComponent: () => import('./features/sucursal/mostrador').then(m => m.Mostrador) },
+      { path: 'alquileres', title: 'Alquileres · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
+        loadComponent: () => import('./features/sucursal/alquileres').then(m => m.Alquileres) },
       { path: 'personal', title: 'Personal · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
         loadComponent: () => import('./features/sucursal/personal').then(m => m.Personal) },
       { path: 'perfil', title: 'Mi perfil · RutaGT', loadComponent: () => import('./features/comun/perfil-form').then(m => m.PerfilPage) },
