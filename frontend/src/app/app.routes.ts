@@ -20,6 +20,8 @@ export const routes: Routes = [
   {
     path: 'portal', component: Portal, children: [
       { path: '', pathMatch: 'full', redirectTo: 'viajes' },
+      { path: 'viajes', title: 'Viajes · RutaGT', loadComponent: () => import('./features/portal/viajes').then(m => m.BuscarViajes) },
+      { path: 'viajes/:id', title: 'Elegir asientos · RutaGT', loadComponent: () => import('./features/portal/asientos').then(m => m.ElegirAsientos) },
       { path: 'cuenta', title: 'Mi cuenta · RutaGT', canActivate: [autenticadoGuard, rolGuard], data: roles('CLIENTE'),
         loadComponent: () => import('./features/portal/cuenta').then(m => m.MiCuenta) },
     ],
