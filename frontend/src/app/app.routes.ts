@@ -20,6 +20,8 @@ export const routes: Routes = [
   {
     path: 'portal', component: Portal, children: [
       { path: '', pathMatch: 'full', redirectTo: 'viajes' },
+      { path: 'cuenta', title: 'Mi cuenta · RutaGT', canActivate: [autenticadoGuard, rolGuard], data: roles('CLIENTE'),
+        loadComponent: () => import('./features/portal/cuenta').then(m => m.MiCuenta) },
     ],
   },
 
