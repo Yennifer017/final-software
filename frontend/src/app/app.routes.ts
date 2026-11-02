@@ -50,6 +50,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/sucursal/taller').then(m => m.Taller) },
       { path: 'personal', title: 'Personal · RutaGT', canActivate: [rolGuard], data: roles('ADMIN_SUCURSAL'),
         loadComponent: () => import('./features/sucursal/personal').then(m => m.Personal) },
+      ...['buses', 'choferes', 'ingresos-boletos', 'ingresos-alquiler', 'depreciacion', 'taller-bus', 'taller-categoria'].map(id => ({
+        path: 'reportes/' + id, title: 'Reportes · RutaGT', canActivate: [rolGuard], data: { ...roles('ADMIN_SUCURSAL'), reporteId: id },
+        loadComponent: () => import('./features/reportes/reporte').then(m => m.ReportePage),
+      })),
       { path: 'perfil', title: 'Mi perfil · RutaGT', loadComponent: () => import('./features/comun/perfil-form').then(m => m.PerfilPage) },
     ],
   },
@@ -63,6 +67,10 @@ export const routes: Routes = [
       { path: 'configuracion', title: 'Configuración · RutaGT', loadComponent: () => import('./features/admin/configuracion').then(m => m.ConfiguracionPage) },
       { path: 'correos', title: 'Correos y licencias · RutaGT', loadComponent: () => import('./features/admin/correos').then(m => m.Correos) },
       { path: 'mapa', title: 'Mapa de rutas · RutaGT', loadComponent: () => import('./features/reportes/mapa-rutas').then(m => m.MapaRutasPage) },
+      ...['financiero', 'rutas', 'taller-categoria'].map(id => ({
+        path: 'reportes/' + id, title: 'Reportes · RutaGT', data: { reporteId: id },
+        loadComponent: () => import('./features/reportes/reporte').then(m => m.ReportePage),
+      })),
       { path: 'perfil', title: 'Mi perfil · RutaGT', loadComponent: () => import('./features/comun/perfil-form').then(m => m.PerfilPage) },
     ],
   },
